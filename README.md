@@ -1,11 +1,11 @@
 # Flaskr... continued
 Flaskr (Flask tutorial) continued...  with homework
 
-This repository pick up from where flask tutorial ([the Flaskr blog application](https://flask.palletsprojects.com/en/1.1.x/tutorial/) ) left up.
+This repository pick up from where flask tutorial ([the Flaskr blog application](https://flask.palletsprojects.com/en/1.1.x/tutorial/) ) left up. You can find the original git repository [here](https://github.com/pallets/flask/tree/1.1.2/examples/tutorial)
 
 At the end of the tutorial you're left with some "homework": suggestions to extend the blog application and improve your skills. 
 
-In this repository I'll do my best to fullfil those suggestions and at the same time add some more features and change (improve ?) the aspect of the application.
+In this repository I'll do my best to fullfil those suggestions and, at the same time, add some more features and change (improve ?) the look and feel of the application.
 For the latest I'll use the popular framework **Boostrap (vers. 4)** to change the appearence of the blog.
 
 Here's the list of Flask's team suggestions:
@@ -32,6 +32,10 @@ Here's the list of Flask's team suggestions:
 And this is the list of my extensions:
 
 
+* Truncate length of post in main view (for longer posts)
+
+* Add a "discard" button in edit mode
+
 * New appearance using Boostrap framework
 
 * Extend user personal informations
@@ -42,7 +46,7 @@ And this is the list of my extensions:
 
 For installation the same suggestion of Flask's team applies.
 
-Install
+Install *(from the original Flask github repository)*
 -------
 
 **Be sure to use the same version of the code as the version of the docs

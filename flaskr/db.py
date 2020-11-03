@@ -38,6 +38,15 @@ def init_db():
         db.executescript(f.read().decode("utf8"))
 
 
+def update_db(filename):
+    """Update database according to sql commands in filename"""
+    db = get_db()
+
+    with current_app.open_resource(filename) as f:
+        db.executescript(f.read().decode("utf8"))
+
+
+
 @click.command("init-db")
 @with_appcontext
 def init_db_command():
@@ -46,9 +55,19 @@ def init_db_command():
     click.echo("Initialized the database.")
 
 
+@click.command("update-db")
+@click.argument("filename")
+@with_appcontext
+def update_db_command(filename):
+    """Update existing db."""
+    update_db(filename)
+    click.echo("Database updated.")
+
+
 def init_app(app):
     """Register database functions with the Flask app. This is called by
     the application factory.
     """
     app.teardown_appcontext(close_db)
     app.cli.add_command(init_db_command)
+    app.cli.add_command(update_db_command)

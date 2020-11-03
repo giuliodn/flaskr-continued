@@ -4,6 +4,7 @@ from flask import g
 from flask import redirect
 from flask import render_template
 from flask import request
+from flask import session
 from flask import url_for
 from werkzeug.exceptions import abort
 
@@ -18,7 +19,7 @@ def index():
     """Show all the posts, most recent first."""
     db = get_db()
     posts = db.execute(
-        "SELECT p.id, title, body, created, author_id, username"
+        "SELECT p.id, title, body, created, author_id, username, likes, unlikes"
         " FROM post p JOIN user u ON p.author_id = u.id"
         " ORDER BY created DESC"
     ).fetchall()
@@ -40,7 +41,7 @@ def get_post(id, check_author=True):
     post = (
         get_db()
         .execute(
-            "SELECT p.id, title, body, created, author_id, username"
+            "SELECT p.id, title, body, created, author_id, username, likes, unlikes"
             " FROM post p JOIN user u ON p.author_id = u.id"
             " WHERE p.id = ?",
             (id,),
@@ -123,3 +124,95 @@ def delete(id):
     db.execute("DELETE FROM post WHERE id = ?", (id,))
     db.commit()
     return redirect(url_for("blog.index"))
+
+@bp.route("/<int:id>/show")
+def show(id):
+    """Show a post no matter who the author is"""
+    post = get_post(id, check_author=False)
+    return render_template("blog/show.html", post=post)
+
+
+@bp.route("/<int:id>/show_like", endpoint='show_like')
+@bp.route("/<int:id>/like")
+@login_required
+def like(id):
+    """ Like a post """
+    post = get_post(id, check_author=False)
+    user_id = session.get("user_id")
+    db=get_db()
+
+    # Check if user already likes this post
+    likes = (
+        get_db()
+        .execute(
+            "SELECT likes FROM likes WHERE user_id=? AND post_id=?", (user_id, id),
+        )
+        .fetchone()
+    )
+
+    if likes is not None and likes['likes'] != 0:
+        # User already likes this post; just tell him and do nothing
+        flash("You already like this post!")
+    elif likes is not None and likes['likes'] == 0:
+        # User didn't like this post before. Remove his preference from
+        # likes table and decrement unlike from post
+        db.execute("DELETE FROM likes"
+                   " WHERE user_id=? AND post_id=?", (user_id, id))
+        db.execute("UPDATE post SET unlikes=unlikes-1 WHERE id=?", (id,))
+        db.commit()
+        flash("You did not like this post before. Now you're neutral on this post")
+    else:
+        # Add preference of user for this post (likes=1), and add a like to the post
+        db.execute("INSERT INTO likes (user_id, post_id, likes)"
+                   " VALUES (?, ?, ?)", (user_id, id, 1))
+        db.execute("UPDATE post SET likes=likes+1 WHERE id=?", (id,))
+        db.commit()
+
+    print(request.endpoint)
+
+    if 'show_like' in request.endpoint:
+        return redirect(url_for("blog.show", id=id))
+    else:
+        return redirect(url_for("blog.index"))
+
+@bp.route("/<int:id>/show_unlike", endpoint='show_unlike')
+@bp.route("/<int:id>/unlike")
+@login_required
+def unlike(id):
+    """ Unlike a post """
+    post = get_post(id, check_author=False)
+    user_id = session.get("user_id")
+    db=get_db()
+
+    # Check if user already likes this post
+    likes = (
+        get_db()
+        .execute(
+            "SELECT likes FROM likes WHERE user_id=? AND post_id=?", (user_id, id),
+        )
+        .fetchone()
+    )
+
+    if likes is not None and likes['likes'] == 0:
+        # User already doesn't like this post; just tell him and do nothing
+        flash("You already don't like this post!")
+    elif likes is not None and likes['likes'] != 0:
+        # User did like this post before. Remove his preference from
+        # likes table and decrement like from post
+        db.execute("DELETE FROM likes"
+                   " WHERE user_id=? AND post_id=?", (user_id, id))
+        db.execute("UPDATE post SET likes=likes-1 WHERE id=?", (id,))
+        db.commit()
+        flash("You did like this post before. Now you're neutral on this post")
+    else:
+        # Add preference of user for this post (likes=1), and add a like to the post
+        db.execute("INSERT INTO likes (user_id, post_id, likes)"
+                   " VALUES (?, ?, ?)", (user_id, id, 0))
+        db.execute("UPDATE post SET unlikes=unlikes+1 WHERE id=?", (id,))
+        db.commit()
+
+    if 'show_unlike' in request.endpoint:
+        return redirect(url_for("blog.show", id=id))
+    else:
+        return redirect(url_for("blog.index"))
+
