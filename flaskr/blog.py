@@ -58,29 +58,39 @@ def get_post(id, check_author=True):
     return post
 
 
-def get_comments(id):
+def get_comments(post_id, comment_id=None):
     """Get comments to a post.
 
     :param id: id of post to get comments for
+    :comment id: id of a single comment to return
     :return: the comments with author and date information
+    :return: one comment with author and date information if comment_id is not None
     :return: None if there're no comments
     """
-    comments = (
-        get_db()
-        .execute(
-            "SELECT c.id, comment_body, comment_datetime, u.username, c.user_id"
-            " FROM comments c JOIN user u ON c.user_id = u.id"
-            " WHERE post_id = ?",
-            (id,),
+    if comment_id == None:
+        # comment_id not specified: fetch all of them
+        comments = (
+            get_db()
+            .execute(
+                "SELECT c.id, comment_body, comment_created, u.username, c.user_id"
+                " FROM comments c JOIN user u ON c.user_id = u.id"
+                " WHERE post_id = ?",
+                (post_id,),
+            )
+            .fetchall()
         )
-        .fetchall()
-    )
-
-    # if c is None:
-    #     abort(404, f"Post id {id} doesn't exist.")
-
-    # if check_author and post["author_id"] != g.user["id"]:
-    #     abort(403)
+    else:
+        # Return just one comment
+        comments = (
+            get_db()
+            .execute(
+                "SELECT c.id, comment_body, comment_created, u.username, c.user_id"
+                " FROM comments c JOIN user u ON c.user_id = u.id"
+                " WHERE post_id = ? AND c.id = ?",
+                (post_id, comment_id),
+            )
+            .fetchone()
+        )
 
     return comments
 
@@ -153,23 +163,15 @@ def delete(id):
     db.commit()
     return redirect(url_for("blog.index"))
 
-# @bp.route("/<int:id>/show", methods=["GET"])
-# def show(id):
-#     """Show a post no matter who the author is"""
-#     post = get_post(id, check_author=False)
-#     comments = get_comments(id)
-
-    return render_template("blog/show.html", post=post, comments=comments)
-
 
 @bp.route("/<int:id>/show", methods=["GET", "POST"])
-# @bp.route("/<int:id>/show")
 def show(id):
     """Show a post no matter who the author is"""
     post = get_post(id, check_author=False)
     comments = get_comments(id)
 
     if request.method == "POST":
+        # The form has a comment to save
         comment_body = request.form["body"]
         error = None
 
@@ -184,13 +186,13 @@ def show(id):
                 "INSERT INTO comments (comment_body, post_id, user_id) VALUES (?, ?, ?)",
                 (comment_body, id, g.user["id"]),
             )
+            # Update the number of comments to the post
             db.execute("UPDATE post SET nr_comments=nr_comments+1 WHERE id=?", (id,))
             db.commit()
-            #return redirect(url_for("blog/show.index"))
 
         return redirect(url_for("blog.show", id=id))
 
-    # return redirect(url_for("blog.show", id=id))
+    # The method is "GET": just show the page
     return render_template("blog/show.html", post=post, comments=comments)
 
 
@@ -278,33 +280,40 @@ def unlike(id):
     else:
         return redirect(url_for("blog.index"))
 
-@bp.route("/<int:id>/comment_update", methods=("GET", ))
+@bp.route("/<int:id>/comment_update", methods=("GET", "POST"))
 @login_required
 def comment_update(id):
-    """Update a post if the current user is the author."""
+    """Update a comment"""
     post = get_post(id, check_author=False)
-
     comment_id = request.args.get('comment_id')
+    comment = get_comments(id, comment_id)
 
-    # if request.method == "POST":
-    #     title = request.form["title"]
-    #     body = request.form["body"]
-    #     error = None
+    # Prevent comment changes from others than author
+    if comment["user_id"] != g.user["id"]:
+        abort(403)
 
-    #     if not title:
-    #         error = "Title is required."
+    if request.method == "GET":
+        return render_template("blog/update_comment.html", post=post, comments=comment)
 
-    #     if error is not None:
-    #         flash(error)
-    #     else:
-    #         db = get_db()
-    #         db.execute(
-    #             "UPDATE post SET title = ?, body = ? WHERE id = ?", (title, body, id)
-    #         )
-    #         db.commit()
-    #         return redirect(url_for("blog.index"))
+    if request.method == "POST":
+        comment_body = request.form["body"]
+        error = None
 
-    return render_template("blog/update.html", post=post)
+        if not comment_body:
+            error = "Comment is empty, consider deleting your comment"
+
+        if error is not None:
+            flash(error)
+        else:
+            db = get_db()
+            db.execute(
+                "UPDATE comments SET comment_body=? WHERE id=?",
+                (comment_body, comment_id),
+            )
+            db.commit()
+
+        # if user is updating comment he can only come from blog/show
+        return redirect(url_for("blog.show", id=id))
 
 
 @bp.route("/<int:id>/comment_delete", methods=("GET",))
@@ -312,14 +321,21 @@ def comment_update(id):
 def comment_delete(id):
     """Delete a comment.
 
-    Ensures that the post exists and that the logged in user is the
-    author of the post.
+    Ensures that the comment exists and that the logged in user is the
+    author of the comment.
     """
     comment_id = request.args.get('comment_id')
+    # The following is required to check the comment author and logged in user are the same
+    comment = get_comments(id, comment_id)
+
+    # Prevent user to delete if he's not the author
+    if comment["user_id"] != g.user["id"]:
+        abort(403)
 
     #get_post(id)
     db = get_db()
     db.execute("DELETE FROM comments WHERE id = ?", (comment_id,))
+    db.execute("UPDATE post SET nr_comments=nr_comments-1 WHERE id=?", (id,))
     db.commit()
 
     return redirect(url_for("blog.show", id=id))

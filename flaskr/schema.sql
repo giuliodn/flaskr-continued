@@ -19,8 +19,8 @@ CREATE TABLE post (
   created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   title TEXT NOT NULL DEFAULT 0,
   body TEXT NOT NULL DEFAULT 0,
-  likes INTEGER,
-  unlikes INTEGER,
+  likes INTEGER DEFAULT 0,
+  unlikes INTEGER DEFAULT 0,
   nr_comments INTEGER DEFAULT 0,
   FOREIGN KEY (author_id) REFERENCES user (id)
 );
@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS comments (
   user_id INTEGER NOT NULL,
   post_id INTEGER NOT NULL,
   comment_body TEXT NOT NULL DEFAULT 0,
-  comment_datetime DATETIME DEFAULT CURRENT_TIMESTAMP,
+  comment_created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (user_id) REFERENCES user (id),
   FOREIGN KEY (post_id) REFERENCES post (id)
 );

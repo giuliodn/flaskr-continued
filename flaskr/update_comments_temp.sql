@@ -1,8 +1,7 @@
 -- Flaskr tutorial ...continued (by giuliodn)
 -- Update schema.sql
 
-
-ALTER TABLE post ADD COLUMN nr_comments INTEGER DEFAULT 0;
+DROP TABLE IF EXISTS comments;
 
 CREATE TABLE IF NOT EXISTS comments (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
