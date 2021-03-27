@@ -96,6 +96,21 @@ nav ul li a, nav ul li span, header .action {
   font-style: italic;
 }
 
+.post .comment-header {
+  padding-left: 1rem;
+  font-size: 0.85em;
+  color: #377ba8;
+  font-style: italic;
+  margin: 0;
+}
+
+.post .comment {
+  padding-left: 1rem;
+  font-size: 0.85em;
+  color: black;
+  margin-top: 0.2rem;
+}
+
 .post .body {
   white-space: pre-line;
 }
