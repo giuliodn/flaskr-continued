@@ -22,7 +22,7 @@
       <p class="body">{{ post['body'] }}</p>
       <p class="about">{{ post['likes'] }}   <a class="action" href="{{ url_for('.like', id=post['id']) }}">likes</a>, 
                        {{ post['unlikes'] }} <a class="action" href="{{ url_for('.unlike', id=post['id']) }}">unlikes</a>, 
-                       {{ post['nr_comments'] }} <a>comments</a>
+                       {{ post['nr_comments'] }} <a class="action" href="{{ url_for('blog.show', id=post['id']) }}">comments</a>
                       </p>
     </article>
     {% if not loop.last %}
