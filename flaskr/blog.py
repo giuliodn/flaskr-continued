@@ -23,6 +23,7 @@ def index():
         " FROM post p JOIN user u ON p.author_id = u.id"
         " ORDER BY created DESC"
     ).fetchall()
+    
     return render_template("blog/index.html", posts=posts)
 
 
@@ -476,3 +477,25 @@ def show_tag(tag_id):
         (tag_id, )
     ).fetchall()
     return render_template("blog/index.html", posts=posts)
+
+@bp.route("/search", methods=("POST",))
+def search():
+    """Show all the posts corresponding to search"""
+
+    search = request.form['searchbox']
+    search = search.replace('*', '%')
+    search = search.replace(' ', '%')
+    search = '%' + search + '%'
+    search = search.replace(r'%%', '%')
+
+    db = get_db()
+    posts = db.execute(
+        "SELECT p.id, title, body, created, author_id, username, likes, unlikes, nr_comments"
+        " FROM post p JOIN user u ON author_id=u.id"
+        " WHERE title LIKE ?"
+        " ORDER BY created DESC",
+        (search, ),
+    ).fetchall()
+    
+    return render_template("blog/index.html", posts=posts)
+

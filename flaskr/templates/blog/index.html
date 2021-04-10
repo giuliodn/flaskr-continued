@@ -2,12 +2,18 @@
 
 {% block header %}
   <h1>{% block title %}Posts{% endblock %}</h1>
+  <form class="searchform" action="{{ url_for('blog.search')}}" method="post">
+    <input type="text" name="searchbox" placeholder="Search.."}}">
+  </form>
   {% if g.user %}
     <a class="action" href="{{ url_for('blog.create') }}">New</a>
   {% endif %}
 {% endblock %}
 
 {% block content %}
+  {% if not posts|length %}
+    <p> Sorry, no post to show...</p>
+  {% endif%}
   {% for post in posts %}
     <article class="post">
       <header>

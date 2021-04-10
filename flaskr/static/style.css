@@ -153,6 +153,28 @@ nav ul li a, nav ul li span, header .action {
   margin-bottom: 1em;
 }
 
+.content .searchform {
+  margin: 0;
+  margin-left: 2em;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  width: 100%;
+}
+
+.content .searchform input[type=text] {
+  width: 150px;
+  margin-bottom: 0.5em;
+  -webkit-transition: width 0.4s ease-in-out;
+  transition: width 0.4s ease-in-out;
+}
+
+/* When the input field gets focus, change its width to 100% */
+.content .searchform input[type=text]:focus {
+  width: 100%;
+}
+
+
 .content textarea {
   min-height: 12em;
   resize: vertical;
