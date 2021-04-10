@@ -24,7 +24,7 @@ def index():
         " ORDER BY created DESC"
     ).fetchall()
     
-    return render_template("blog/index.html", posts=posts)
+    return render_template("blog/index.html", posts=posts, page=1, pages=5)
 
 
 def get_post(id, check_author=True):
