@@ -21,20 +21,31 @@
                      {{ post['nr_comments'] }} <a>comments</a>
                     </p>
 
+    <h3 style="margin-bottom: 0.2rem">Tags:</h3>
+    <div>
+      {% for tag in tags %}
+        <p class="tag"><a href="{{ url_for('.show_tag', tag_id=tag['id']) }}" style="text-decoration:none;">{{ tag['tag'] }} </a></p>
+      {% if loop.last %}
+      {% endif %}
+      {% endfor %}
+    </div>
+    <div style="clear:both;"></div>
+    <hr>
+      
     <h3>Comments:</h3>
     {% for comment in comments %}
-    <div>
-      <p class="comment-header">{{ comment['username'] }} on {{ comment['comment_created'].strftime('%Y-%m-%d %H:%M') }} :</p>
-      <p class="comment">{{ comment['comment_body'] }}</p>
-      {% if g.user['id'] == comment['user_id'] %}
-        <a class="action, comment-header" href="{{ url_for('.comment_update', id=post['id'], comment_id=comment['id']) }}">Edit comment </a>
-        <a class="action, comment-header" href="{{ url_for('.comment_delete', id=post['id'], comment_id=comment['id']) }}">Delete comment </a>
+      <div>
+        <p class="comment-header">{{ comment['username'] }} on {{ comment['comment_created'].strftime('%Y-%m-%d %H:%M') }} :</p>
+        <p class="comment">{{ comment['comment_body'] }}</p>
+        {% if g.user['id'] == comment['user_id'] %}
+          <a class="action, comment-header" href="{{ url_for('.comment_update', id=post['id'], comment_id=comment['id']) }}">Edit comment </a>
+          <a class="action, comment-header" href="{{ url_for('.comment_delete', id=post['id'], comment_id=comment['id']) }}">Delete comment </a>
+        {% endif %}
+      </div>
+      {% if not loop.last %}
+        <hr>
       {% endif %}
-    </div>
-    {% if not loop.last %}
-      <hr>
-    {% endif %}
-  {% endfor %}
+    {% endfor %}
 
   <form style="padding-left: 1rem; padding-top: 3rem;;" method="post">
     <label for="body">Leave your comment:</label>
