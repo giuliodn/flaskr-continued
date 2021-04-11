@@ -21,6 +21,11 @@ POSTS_PER_PAGE = 5
 @bp.route("/")
 def index():
     """Show all the posts, most recent first."""
+
+    # Reset previous searches
+    session['search_string'] = ''
+    session['user_search'] = ''
+
     db = get_db()
 
     # Count all pertinent posts
@@ -30,12 +35,8 @@ def index():
     pages = ceil(total_posts / POSTS_PER_PAGE)
 
     # Page requested by user: page=1 if none requested
-    page = request.args.get('page', None)
-    if page is None:
-        page = 1
-    else:
-        page = int(page)
-
+    page = int(request.args.get('page', default=1))
+    
     # Check if page exceedes total pages
     # Should not be the case, but prevents misuse
     if page > pages:
@@ -51,7 +52,7 @@ def index():
         (limit, offset),
     ).fetchall()
     
-    return render_template("blog/index.html", posts=posts, page=page, pages=pages)
+    return render_template("blog/index.html", posts=posts, tag_id=None, page=page, pages=pages)
 
 
 def get_post(id, check_author=True):
@@ -496,6 +497,7 @@ def show_tag(tag_id):
     """Show all the posts associated with tag_id.
     """
     db = get_db()
+    print('test')
 
     # Count all pertinent posts
     total_posts = db.execute(
@@ -509,11 +511,8 @@ def show_tag(tag_id):
     pages = ceil(total_posts / POSTS_PER_PAGE)
 
     # Page requested by user: page=1 if none requested
-    page = request.args.get('page', None)
-    if page is None:
-        page = 1
-    else:
-        page = int(page)
+    page = int(request.args.get('page', default=1))
+    print(page)
 
     # Check if page exceedes total pages
     # Should not be the case, but prevents misuse
@@ -530,18 +529,28 @@ def show_tag(tag_id):
         " ORDER BY created DESC LIMIT ? OFFSET ?",
         (tag_id, limit, offset)
     ).fetchall()
-    return render_template("blog/index.html", posts=posts, page=page, pages=pages)
+    return render_template("blog/index.html", posts=posts, tag_id=tag_id, page=page, pages=pages)
 
-@bp.route("/search", methods=("POST",))
+@bp.route("/search", methods=("GET", "POST"))
 def search():
     """Show all the posts corresponding to search"""
 
-    # Format search string to be used by SQL query
-    search = request.form['searchbox']
-    search = search.replace('*', '%')
-    search = search.replace(' ', '%')
-    search = '%' + search + '%'
-    search = search.replace(r'%%', '%')
+    if request.method == 'POST':
+        search = request.form['searchbox']
+        if search == '':
+            # User reset search
+            return redirect(url_for("blog.index"))
+        # Save user input for later display
+        session['user_search'] = search
+        # Format search string to be used by SQL query
+        search = search.replace('*', '%')
+        search = search.replace(' ', '%')
+        search = '%' + search + '%'
+        search = search.replace(r'%%', '%')
+        session['search_string'] = search
+    else:
+        # search = request.args.get('search', default=None)
+        search = session['search_string']
 
     db = get_db()
 
@@ -549,7 +558,7 @@ def search():
     total_posts = db.execute(
         "SELECT COUNT(*)"
         " FROM post p JOIN user u ON author_id=u.id"
-        " WHERE title LIKE ?"
+        " WHERE title LIKE ?", 
         (search, ),
     ).fetchone()[0]
 
@@ -557,11 +566,7 @@ def search():
     pages = ceil(total_posts / POSTS_PER_PAGE)
 
     # Page requested by user: page=1 if none requested
-    page = request.args.get('page', None)
-    if page is None:
-        page = 1
-    else:
-        page = int(page)
+    page = int(request.args.get('page', default=1))
 
     # Check if page exceedes total pages
     # Should not be the case, but prevents misuse
@@ -579,5 +584,5 @@ def search():
         (search, limit, offset),
     ).fetchall()
     
-    return render_template("blog/index.html", posts=posts)
+    return render_template("blog/index.html", posts=posts, tag_id=None, page=page, pages=pages)
 

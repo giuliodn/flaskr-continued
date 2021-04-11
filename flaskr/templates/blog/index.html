@@ -3,7 +3,7 @@
 {% block header %}
   <h1>{% block title %}Posts{% endblock %}</h1>
   <form class="searchform" action="{{ url_for('blog.search')}}" method="post">
-    <input type="text" name="searchbox" placeholder="Search.."}}">
+    <input type="text" name="searchbox" placeholder="Search.." value="{{ session['user_search'] }}">
   </form>
   {% if g.user %}
     <a class="action" href="{{ url_for('blog.create') }}">New</a>
@@ -39,7 +39,7 @@
       <hr>
       <div class="pagination">
         {% if page > 1 %}
-          <a href="{{ url_for('index', page = page-1) }}">&laquo;</a>
+          <a href="{{ url_for(request.endpoint, page = page-1, tag_id=tag_id) }}">&laquo;</a>
         {% endif %}
 
         <!-- Loop through the number of pages to display a link for each-->
@@ -47,12 +47,12 @@
           {% if page_n == page %}
             <a class="active">{{page_n}}</a>
           {% else %}
-            <a href="{{ url_for('index', page=page_n) }}">{{page_n}}</a>
+            <a href="{{ url_for(request.endpoint, page=page_n, tag_id=tag_id) }}">{{page_n}}</a>
           {% endif %}
         {% endfor %}
 
         {% if page < pages %}
-          <a href="{{ url_for('index', page=page+1) }}">&raquo;</a>
+          <a href="{{ url_for(request.endpoint, page=page+1, tag_id=tag_id) }}">&raquo;</a>
         {% endif %}
 
         <p>
