@@ -36,23 +36,31 @@
       {% endif %}
     {% endfor %}
     {% if pages > 1 %}
+      <hr>
       <div class="pagination">
-        <a href="{{ url_for('index', page=colors.prev_num) }}" class="{% if colors.page == 1 %}disabled{% endif %}">&laquo;</a>
+        {% if page > 1 %}
+          <a href="{{ url_for('index', page = page-1) }}">&laquo;</a>
+        {% endif %}
 
         <!-- Loop through the number of pages to display a link for each-->
-        {% for page in pages["tolist"] %}
-          {% if page = pages["currentpage"] %}
-            <a class="active" href="#">{page}</a>
+        {% for page_n in range([page-2, 1]|max, [page+3, pages+1]|min) %}
+          {% if page_n == page %}
+            <a class="active">{{page_n}}</a>
           {% else %}
-            <a href="{{ url_for('index', page=page) }}">{page}</a>
+            <a href="{{ url_for('index', page=page_n) }}">{{page_n}}</a>
           {% endif %}
-          <a href="#">&raquo;</a>
+        {% endfor %}
+
+        {% if page < pages %}
+          <a href="{{ url_for('index', page=page+1) }}">&raquo;</a>
+        {% endif %}
+
+        <p>
+        Showing page {{ page }} of {{ pages }}
+        </p>
       </div>
 
-      <p>
-      Showing page {{ pages["currentpage"] }} of {{ pages["pages"] }}
-      </p>
 
-      {% endif %}
+    {% endif %}
   {% endif %}
 {% endblock %}

@@ -188,3 +188,34 @@ input[type=submit] {
   align-self: start;
   min-width: 10em;
 }
+
+.pagination {
+  padding-top: 1em;
+  width: 50%;
+  margin: auto;
+  text-align: center;
+}
+
+.pagination a {
+  color: black;
+  display: inline;
+  float: none;
+  padding: 8px 16px;
+  text-decoration: none;
+}
+
+.pagination a.active {
+  background-color: #377ba8;
+  color: white;
+  border-radius: 5px;
+}
+
+.pagination a:hover:not(.active) {
+  background-color: #ddd;
+  border-radius: 5px;
+}
+
+.pagination p {
+  font-size: 0.85em;
+  color: #377ba8;
+}
