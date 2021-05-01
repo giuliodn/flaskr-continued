@@ -6,8 +6,13 @@ from flask import render_template
 from flask import request
 from flask import session
 from flask import url_for
+from flask import current_app
+from flask import send_from_directory
 from werkzeug.exceptions import abort
+from werkzeug.utils import secure_filename
+import os
 from math import ceil
+from uuid import uuid4
 
 from flaskr.auth import login_required
 from flaskr.db import get_db
@@ -16,6 +21,10 @@ bp = Blueprint("blog", __name__)
 
 # Hardcoding posts per page
 POSTS_PER_PAGE = 5
+
+# Image upload
+#UPLOAD_FOLDER = 'images'
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'tiff'}
 
 
 @bp.route("/")
@@ -46,7 +55,7 @@ def index():
     offset = (page-1) * POSTS_PER_PAGE
 
     posts = db.execute(
-        "SELECT p.id, title, body, created, author_id, username, likes, unlikes, nr_comments"
+        "SELECT p.id, title, image, body, created, author_id, username, likes, unlikes, nr_comments"
         " FROM post p JOIN user u ON p.author_id = u.id"
         " ORDER BY created DESC LIMIT ? OFFSET ?",
         (limit, offset),
@@ -163,6 +172,14 @@ def create():
         forbidden_chars_nicetxt = ' '.join(list(forbidden_chars))
         if any((c in forbidden_chars) for c in tags):
             error = "This characters %s are not allowed in tags, please remove them" % forbidden_chars_nicetxt
+        if 'file' in request.files:
+            image_file = request.files['file']
+            if allowed_file(image_file.filename):
+                #filename = secure_filename(image_file.filename)
+                filename = str(uuid4())
+                image_file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
+            else:
+                error = "File extension not allowed"
 
         if error is not None:
             flash(error)
@@ -171,8 +188,8 @@ def create():
             # lastrowid gives the id of the newly inserted post 
             # which is needed to associate tags
             post_id= db.execute(
-                "INSERT INTO post (title, body, author_id) VALUES (?, ?, ?)",
-                (title, body, g.user["id"]),
+                "INSERT INTO post (title, image, body, author_id) VALUES (?, ?, ?, ?)",
+                (title, filename, body, g.user["id"]),
             ).lastrowid
             db.commit()
 
@@ -586,3 +603,11 @@ def search():
     
     return render_template("blog/index.html", posts=posts, tag_id=None, page=page, pages=pages)
 
+@bp.route("/uploaded_image/<filename>")
+def uploaded_image(filename):
+    return send_from_directory(current_app.config['UPLOAD_FOLDER'],
+                               filename)
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS

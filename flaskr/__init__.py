@@ -11,6 +11,8 @@ def create_app(test_config=None):
         SECRET_KEY="dev",
         # store the database in the instance folder
         DATABASE=os.path.join(app.instance_path, "flaskr.sqlite"),
+        # Image storage location
+        UPLOAD_FOLDER=os.path.join(app.instance_path, "images"),
     )
 
     if test_config is None:
@@ -47,6 +49,6 @@ def create_app(test_config=None):
     # the tutorial the blog will be the main index
     app.add_url_rule("/", endpoint="index")
 
-    #print(app.url_map)
+    print(app.url_map)
 
     return app

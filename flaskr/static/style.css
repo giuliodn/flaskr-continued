@@ -91,6 +91,14 @@ nav ul li a, nav ul li span, header .action {
   margin-bottom: 0;
 }
 
+.post > img {
+  display: block;
+  max-width:800px;
+  max-height:300px;
+  width: auto;
+  height: auto;
+}
+
 .post .about {
   color: slategray;
   font-style: italic;
