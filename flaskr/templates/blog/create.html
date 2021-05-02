@@ -5,11 +5,16 @@
 {% endblock %}
 
 {% block content %}
-  <form method="post" enctype=multipart/form-data>
+  <form method="post" action="{{ url_for('.create', filename=filename) }}" enctype=multipart/form-data>
     <label for="title">Title</label>
     <input name="title" id="title" value="{{ request.form['title'] }}" required>
+    {% if filename %}
+      <img src="{{ url_for('.uploaded_image', filename=filename)}}">
+      <input class="danger" type="submit" formaction ="{{ url_for('.delete_image', id=None, mode='create') }}" value="Delete image">
+    {% endif %}
     <label for="file">Image</label>
-    <input type=file name=file>
+    <input type="file" name=file>
+    <input type="submit" value="Update image now" formaction ="{{ url_for('.update_image', id=None, mode='create') }}">
     <label for="body">Body</label>
     <textarea name="body" id="body">{{ request.form['body'] }}</textarea>
     <label for="tags">Add your tags (comma separated):</label>

@@ -92,11 +92,13 @@ nav ul li a, nav ul li span, header .action {
 }
 
 .post > img {
+  margin-top: 0.3rem;
   display: block;
   max-width:800px;
   max-height:300px;
   width: auto;
   height: auto;
+  border: 1px solid #377ba8;
 }
 
 .post .about {

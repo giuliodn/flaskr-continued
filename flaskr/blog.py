@@ -79,7 +79,7 @@ def get_post(id, check_author=True):
     post = (
         get_db()
         .execute(
-            "SELECT p.id, title, body, created, author_id, username, likes, unlikes, nr_comments"
+            "SELECT p.id, title, image, body, created, author_id, username, likes, unlikes, nr_comments"
             " FROM post p JOIN user u ON p.author_id = u.id"
             " WHERE p.id = ?",
             (id,),
@@ -161,6 +161,8 @@ def create():
         title = request.form["title"]
         body = request.form["body"]
         tags = request.form["tags"]
+        filename = request.args.get("filename")
+        print('Filename: %s' % filename)
         error = None
 
         if not title:
@@ -172,13 +174,16 @@ def create():
         forbidden_chars_nicetxt = ' '.join(list(forbidden_chars))
         if any((c in forbidden_chars) for c in tags):
             error = "This characters %s are not allowed in tags, please remove them" % forbidden_chars_nicetxt
+        
         if 'file' in request.files:
             image_file = request.files['file']
-            if allowed_file(image_file.filename):
-                #filename = secure_filename(image_file.filename)
+            print('image_file: %s' % image_file.filename)
+            if image_file.filename == '' and not filename:
+                filename = ''
+            elif allowed_file(image_file.filename):
                 filename = str(uuid4())
                 image_file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
-            else:
+            elif not filename:
                 error = "File extension not allowed"
 
         if error is not None:
@@ -225,6 +230,64 @@ def create():
     return render_template("blog/create.html")
 
 
+@bp.route("/<int:id>/update_image", endpoint='update_image', methods=("POST", ))
+@bp.route("/<int:id>/delete_image", endpoint='delete_image', methods=("POST", ))
+@bp.route("/update_image", endpoint='update_image', methods=("POST", ))
+@bp.route("/delete_image", endpoint='delete_image', methods=("POST", ))
+@login_required
+def image(id=None):
+    """Update image while creating/editing post"""
+
+    mode = request.args.get('mode')
+ 
+    if mode == 'update':
+        post = get_post(id)
+
+    if request.method == "POST":
+        tags = request.form["tags"]
+        error = None
+
+        tags_string = tags
+
+        # Manage endpoint='delete_image' toinstantly delete the image
+        # and continue editing
+        if 'delete_image' in request.endpoint:
+            # Create comma separated string of all the tags
+            filename = ''
+
+        if 'update_image' in request.endpoint:
+            if mode == 'update':
+                filename = post['image']
+            if mode == 'create':
+                filename = ''
+            if 'file' in request.files:
+                image_file = request.files['file']
+                if image_file.filename == '' and filename == '':
+                    filename = ''
+                elif allowed_file(image_file.filename):
+                    filename = str(uuid4())
+                    image_file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
+                elif image_file.filename != '':
+                    # There's some file selected but extension is not allowed
+                    error = "File extension not allowed"
+
+        if error is not None:
+            flash(error)
+        else:
+            if mode == 'update':
+                db = get_db()
+                db.execute(
+                    "UPDATE post SET image = ? WHERE id = ?", (filename, id)
+                )
+                db.commit()
+                # Refresh post
+                post = get_post(id)
+            if mode == 'update':
+                return render_template("blog/update.html", post=post, tags=tags_string)
+            if mode == 'create':
+                return render_template("blog/create.html", filename = filename)
+
+
 @bp.route("/<int:id>/update", methods=("GET", "POST"))
 @login_required
 def update(id):
@@ -236,6 +299,7 @@ def update(id):
     tag_list = []
     for tag in tags_of_post:
         tag_list.append(tag['tag'])
+
 
     if request.method == "POST":
         title = request.form["title"]
@@ -253,12 +317,24 @@ def update(id):
         if any((c in forbidden_chars) for c in tags):
             error = "This characters %s are not allowed in tags, please remove them" % forbidden_chars_nicetxt
 
+        filename = post['image']
+        if 'file' in request.files:
+            image_file = request.files['file']
+            if image_file.filename == '' and filename == '':
+                filename = ''
+            elif allowed_file(image_file.filename):
+                filename = str(uuid4())
+                image_file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
+            elif image_file.filename != '':
+                # There's some file selected but extension is not allowed
+                error = "File extension not allowed"
+
         if error is not None:
             flash(error)
         else:
             db = get_db()
             db.execute(
-                "UPDATE post SET title = ?, body = ? WHERE id = ?", (title, body, id)
+                "UPDATE post SET title = ?, image = ?, body = ? WHERE id = ?", (title, filename, body, id)
             )
             db.commit()
 
