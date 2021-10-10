@@ -114,7 +114,6 @@ nav ul li a, nav ul li span, header .action {
   margin: 0;
 }
 
-
 .post .comment {
   padding-left: 1rem;
   font-size: 0.85em;
@@ -154,6 +153,17 @@ nav ul li a, nav ul li span, header .action {
   flex-direction: column;
 }
 
+.content form > img {
+  margin-top: 0.3rem;
+  align-self: center;
+  flex: 0 0 auto;
+  max-width:800px;
+  max-height:300px;
+  width: auto;
+  height: auto;
+  border: 1px solid #377ba8;
+}
+
 .content label {
   font-weight: bold;
   margin-bottom: 0.5em;
@@ -183,7 +193,6 @@ nav ul li a, nav ul li span, header .action {
 .content .searchform input[type=text]:focus {
   width: 100%;
 }
-
 
 .content textarea {
   min-height: 12em;

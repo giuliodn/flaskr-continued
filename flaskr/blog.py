@@ -249,7 +249,7 @@ def image(id=None):
 
         tags_string = tags
 
-        # Manage endpoint='delete_image' toinstantly delete the image
+        # Manage endpoint='delete_image' to instantly delete the image
         # and continue editing
         if 'delete_image' in request.endpoint:
             # Create comma separated string of all the tags
@@ -398,8 +398,14 @@ def delete(id):
     Ensures that the post exists and that the logged in user is the
     author of the post.
     """
-    get_post(id)
+    post = get_post(id)
     db = get_db()
+
+    # If any image file, delete it
+    if post['image'] is not '':
+        os.remove(os.path.join(current_app.config['UPLOAD_FOLDER'], post['image']))
+
+    # Delete the post
     db.execute("DELETE FROM post WHERE id = ?", (id,))
     db.execute("DELETE FROM tagsofposts WHERE post_id = ?", (id, ))
     db.commit()
