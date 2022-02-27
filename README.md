@@ -5,10 +5,7 @@ This repository pick up from where flask tutorial ([the Flaskr blog application]
 
 At the end of the tutorial you're left with some "homework": suggestions to extend the blog application and improve your skills. 
 
-In this repository I'll do my best to fullfil those suggestions and, at the same time, add some more features and change (improve ?) the look and feel of the application.
-For the latest I'll use the popular framework **Boostrap (vers. 4)** to change the appearence of the blog.
-
-Here's the list of Flask's team suggestions:
+In this repository I'll do my best to fullfil those suggestions:
 
 * A detail view to show a single post. Click a post’s title to go to its page.
 
@@ -28,21 +25,6 @@ Here's the list of Flask's team suggestions:
 
 * An RSS feed of new posts.
 
-
-And this is the list of my extensions:
-
-
-* Truncate length of post in main view (for longer posts)
-
-* Add a "discard" button in edit mode
-
-* New appearance using Boostrap framework
-
-* Extend user personal informations
-
-* Add user avatar
-
-* Deploy on serverless structure
 
 For installation the same suggestion of Flask's team applies.
 
