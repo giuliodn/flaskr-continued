@@ -591,7 +591,6 @@ def comment_delete(id):
 
 
 @bp.route("/<int:tag_id>/show_tag", methods=("GET",))
-@login_required
 def show_tag(tag_id):
     """Show all the posts associated with tag_id.
     """
