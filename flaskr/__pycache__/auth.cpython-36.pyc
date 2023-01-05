@@ -1,33 +1,0 @@
-3
-
-\9D\FEy_\C2\00\00\E3\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00@\00\00\00s\F2\00\00\00d\00dl\00Z\00d\00dlmZ\00d\00dlmZ\00d\00dlmZ\00d\00dlmZ\00d\00dlmZ\00d\00dlmZ\00d\00dlmZ\00d\00d	lm	Z	\00d\00d
-l
-mZ\00d\00dl
-mZ\00d\00dl
-mZ\00ed
-edd\8DZdd\84\00Zejdd\84\00\83Zejdd d\8Ddd\84\00\83Zejdd!d\8Ddd\84\00\83Zejd\83dd\84\00\83ZdS\00)"\E9\00\00\00\00N)\DA	Blueprint)\DAflash)\DAg)\DAredirect)\DArender_template)\DArequest)\DAsession)\DAurl_for)\DAcheck_password_hash)\DAgenerate_password_hash)\DAget_db\DAauthz/auth)\DA
-url_prefixc\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00s\00\00\00t\00j\88\00\83\87\00fdd\84\83}|S\00)z@View decorator that redirects anonymous users to the login page.c\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00s \00\00\00t\00jd\00krttd\83\83S\00\88\00f\00|\00\8ES\00)Nz
-auth.login)r\00\00\00\DAuserr\00\00\00r	\00\00\00)\DAkwargs)\DAview\A9\00\FA3/home/giulio/python/flaskr_continued/flaskr/auth.py\DAwrapped_view\00\00\00s\00\00\00\00
-z$login_required.<locals>.wrapped_view)\DA	functools\DAwraps)r\00\00\00r\00\00\00r\00\00\00)r\00\00\00r\00\00\00\DAlogin_required\00\00\00s\00\00\00\00r\00\00\00c\00\00\00\00\00\00\00\00\00\00\00\00\00\00C\00\00\00s4\00\00\00t\00jd\83}\00|\00dkrdt_nt\83\00jd|\00f\83j\83\00t_dS\00)zbIf a user id is stored in the session, load the user object from
-    the database into ``g.user``.\DAuser_idNzSELECT * FROM user WHERE id = ?)r\00\00\00\DAgetr\00\00\00r\00\00\00r\00\00\00\DAexecute\DAfetchone)r\00\00\00r\00\00\00r\00\00\00r\00\00\00\DAload_logged_in_user \00\00\00s\00\00\00\00
-r\00\00\00z	/register\DAGET\DAPOST)\DAmethodsc\00\00\00\00\00\00\00\00\00\00\00\00\00\00C\00\00\00s\9E\00\00\00t\00jdkr\96t\00jd\00}\00t\00jd\00}t\83\00}d}|\00s2d}n,|s<d}n"|jd|\00f\83j\83\00dk	r^d|\00\9B\00d	\9D}|dkr\8E|jd
-|\00t|\83f\83\00|j\83\00\00tt	d\83\83S\00t
-|\83\00td\83S\00)
-zvRegister a new user.
-
-    Validates that the username is not already taken. Hashes the
-    password for security.
-    r\00\00\00\DAusername\DApasswordNzUsername is required.zPassword is required.z&SELECT id FROM user WHERE username = ?zUser z is already registered.z3INSERT INTO user (username, password) VALUES (?, ?)z
-auth.loginzauth/register.html)r\00\00\00\DAmethod\DAformr\00\00\00r\00\00\00r\00\00\00r\00\00\00\DAcommitr\00\00\00r	\00\00\00r\00\00\00r\00\00\00)r \00\00\00r!\00\00\00\DAdb\DAerrorr\00\00\00r\00\00\00r\00\00\00\DAregister.\00\00\00s(\00\00\00\00
-
-
-r'\00\00\00z/loginc\00\00\00\00\00\00\00\00\00\00\00\00\00\00C\00\00\00s\92\00\00\00t\00jdkr\8At\00jd\00}\00t\00jd\00}t\83\00}d}|jd|\00f\83j\83\00}|dkrHd}nt|d\00|\83sZd}|dkr\82tj\83\00\00|d\00td	<\00t	t
-d
-\83\83S\00t|\83\00td\83S\00)z>Log in a registered user by adding the user id to the session.r\00\00\00r \00\00\00r!\00\00\00Nz%SELECT * FROM user WHERE username = ?zIncorrect username.zIncorrect password.\DAidr\00\00\00\DAindexzauth/login.html)
-r\00\00\00r"\00\00\00r#\00\00\00r\00\00\00r\00\00\00r\00\00\00r
-\00\00\00r\00\00\00\DAclearr\00\00\00r	\00\00\00r\00\00\00r\00\00\00)r \00\00\00r!\00\00\00r%\00\00\00r&\00\00\00r\00\00\00r\00\00\00r\00\00\00r\00\00\00\DAloginT\00\00\00s"\00\00\00\00
-
-
-r+\00\00\00z/logoutc\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00C\00\00\00s\00\00\00t\00j\83\00\00ttd\83\83S\00)z8Clear the current session, including the stored user id.r)\00\00\00)r\00\00\00r*\00\00\00r\00\00\00r	\00\00\00r\00\00\00r\00\00\00r\00\00\00r\00\00\00\DAlogoutp\00\00\00s\00\00\00\00r,\00\00\00)r\00\00\00r\00\00\00)r\00\00\00r\00\00\00)r\00\00\00\DAflaskr\00\00\00r\00\00\00r\00\00\00r\00\00\00r\00\00\00r\00\00\00r\00\00\00r	\00\00\00Zwerkzeug.securityr
-\00\00\00r\00\00\00Z	flaskr.dbr\00\00\00\DA__name__\DAbpr\00\00\00\DAbefore_app_requestr\00\00\00\DArouter'\00\00\00r+\00\00\00r,\00\00\00r\00\00\00r\00\00\00r\00\00\00r\00\00\00\DA<module>\00\00\00s"\00\00\00
-&

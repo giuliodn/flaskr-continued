@@ -1,42 +1,0 @@
-3
-
-~\9D\95_\AB\00\00\E3\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00@\00\00\00s\98\00\00\00d\00dl\00Z\00d\00dlZd\00dlmZ\00d\00dlmZ\00d\00dlmZ\00dd\84\00Zddd\84Zd	d
-\84\00Z	dd\84\00Z
-ejd
-\83edd\84\00\83\83Zejd\83ej
-d\83edd\84\00\83\83\83Zdd\84\00ZdS\00)\E9\00\00\00\00N)\DAcurrent_app)\DAg)\DAwith_appcontextc\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00C\00\00\00s0\00\00\00dt\00kr*tjtjd\00tjd\8Dt\00_tjt\00j_t\00jS\00)z\94Connect to the application's configured database. The connection
-    is unique for each request and will be reused if this is called
-    again.
-    \DAdb\DADATABASE)Zdetect_types)	r\00\00\00\DAsqlite3\DAconnectr\00\00\00\DAconfigZPARSE_DECLTYPESr\00\00\00ZRowZrow_factory\A9\00r
-\00\00\00r
-\00\00\00\FA1/home/giulio/python/flaskr_continued/flaskr/db.py\DAget_db	\00\00\00s
-\00\00\00\00
-r\00\00\00c\00\00\00\00\00\00\00\00\00\00\00\00\00C\00\00\00s \00\00\00t\00jdd\83}|dk	r|j\83\00\00dS\00)zIIf this request connected to the database, close the
-    connection.
-    r\00\00\00N)r\00\00\00\DApop\DAclose)\DAer\00\00\00r
-\00\00\00r
-\00\00\00r\00\00\00\DAclose_db\00\00\00s\00\00\00\00r\00\00\00c\00\00\00\00\00\00\00\00\00\00\00
-\00\00\00C\00\00\00s4\00\00\00t\00\83\00}\00tjd\83\8F}|\00j|j\83\00jd\83\83\00W\00dQ\00R\00X\00dS\00)z*Clear existing data and create new tables.z
-schema.sql\DAutf8N)r\00\00\00r\00\00\00\DA
-open_resource\DA
-executescript\DAread\DAdecode)r\00\00\00\DAfr
-\00\00\00r
-\00\00\00r\00\00\00\DAinit_db!\00\00\00s\00\00\00\00r\00\00\00c\00\00\00\00\00\00\00\00\00\00
-\00\00\00C\00\00\00s4\00\00\00t\00\83\00}tj|\00\83\8F}|j|j\83\00jd\83\83\00W\00dQ\00R\00X\00dS\00)z5Update database according to sql commands in filenamer\00\00\00N)r\00\00\00r\00\00\00r\00\00\00r\00\00\00r\00\00\00r\00\00\00)\DAfilenamer\00\00\00r\00\00\00r
-\00\00\00r
-\00\00\00r\00\00\00\DA	update_db)\00\00\00s\00\00\00\00r\00\00\00zinit-dbc\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00C\00\00\00s\00\00\00t\00\83\00\00tjd\83\00dS\00)z*Clear existing data and create new tables.zInitialized the database.N)r\00\00\00\DAclick\DAechor
-\00\00\00r
-\00\00\00r
-\00\00\00r\00\00\00\DAinit_db_command2\00\00\00s\00\00\00\00r\00\00\00z	update-dbr\00\00\00c\00\00\00\00\00\00\00\00\00\00\00\00\00C\00\00\00s\00\00\00t\00|\00\83\00tjd\83\00dS\00)zUpdate existing db.zDatabase updated.N)r\00\00\00r\00\00\00r\00\00\00)r\00\00\00r
-\00\00\00r
-\00\00\00r\00\00\00\DAupdate_db_command:\00\00\00s\00\00\00\00r\00\00\00c\00\00\00\00\00\00\00\00\00\00\00\00\00C\00\00\00s&\00\00\00|\00j\00t\83\00|\00jjt\83\00|\00jjt\83\00dS\00)zcRegister database functions with the Flask app. This is called by
-    the application factory.
-    N)\DAteardown_appcontextr\00\00\00\DAcli\DAadd_commandr\00\00\00r\00\00\00)\DAappr
-\00\00\00r
-\00\00\00r\00\00\00\DAinit_appC\00\00\00s\00\00\00\00
-r"\00\00\00)N)r\00\00\00r\00\00\00\DAflaskr\00\00\00r\00\00\00\DA	flask.clir\00\00\00r\00\00\00r\00\00\00r\00\00\00r\00\00\00\DAcommandr\00\00\00\DAargumentr\00\00\00r"\00\00\00r
-\00\00\00r
-\00\00\00r
-\00\00\00r\00\00\00\DA<module>\00\00\00s\00\00\00
-
-	

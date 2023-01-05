@@ -1,183 +1,0 @@
-3
-
-\97+s`rJ\00\00\E3\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00@\00\00\00s\E4\00\00d\00dl\00mZ\00d\00dl\00mZ\00d\00dl\00mZ\00d\00dl\00mZ\00d\00dl\00mZ\00d\00dl\00mZ\00d\00dl\00mZ\00d\00dl\00mZ\00d\00d	l	m
-Z
-\00d\00d
-lmZ\00d\00dl
-mZ\00d\00dlmZ\00ed
-e\83ZdZejd\83dd\84\00\83Zd@dd\84ZdAdd\84Zdd\84\00ZejddBd\8Dedd\84\00\83\83Zejd dCd\8Ded!d"\84\00\83\83Zejd#dDd\8Ded$d%\84\00\83\83Zejd&ddgd\8Dd'd(\84\00\83Zejd)d*d+\8Dejd,\83ed-d.\84\00\83\83\83Zejd/d0d+\8Dejd1\83ed2d3\84\00\83\83\83Zejd4dEd\8Ded5d6\84\00\83\83Zejd7dFd\8Ded8d9\84\00\83\83Z ejd:dGd\8Ded;d<\84\00\83\83Z!ejd=dHd\8Dd>d?\84\00\83Z"dS\00)I\E9\00\00\00\00)\DA	Blueprint)\DAflash)\DAg)\DAredirect)\DArender_template)\DArequest)\DAsession)\DAurl_for)\DAabort)\DAceil)\DAlogin_required)\DAget_db\DAblog\E9\00\00\00\FA/c\00\00\00\00\00\00\00\00\00\00\00\00\00\00C\00\00\00s\8A\00\00\00dt\00d<\00dt\00d<\00t\83\00}\00|\00jd\83j\83\00d\00}t|t\00\83}ttjj	ddd\8D\83}||krT|}t}|d\00t\00}|\00jd	||f\83j
-\83\00}td
-|d||d\8DS\00)
-z&Show all the posts, most recent first.\DA\00\DA
-search_string\DAuser_searchzSELECT COUNT(*) FROM POSTr\00\00\00\DApage\E9\00\00\00)\DAdefaultz\A8SELECT p.id, title, body, created, author_id, username, likes, unlikes, nr_comments FROM post p JOIN user u ON p.author_id = u.id ORDER BY created DESC LIMIT ? OFFSET ?zblog/index.htmlN)\DAposts\DAtag_idr\00\00\00\DApages)r\00\00\00r
-\00\00\00\DAexecute\DAfetchoner\00\00\00\DAPOSTS_PER_PAGE\DAintr\00\00\00\DAargs\DAget\DAfetchallr\00\00\00)\DAdb\DAtotal_postsr\00\00\00r\00\00\00\DAlimit\DAoffsetr\00\00\00\A9\00r%\00\00\00\FA3/home/giulio/python/flaskr_continued/flaskr/blog.py\DAindex\00\00\00s\00\00\00\00r'\00\00\00Tc\00\00\00\00\00\00\00\00\00\00\00\00\00C\00\00\00sP\00\00\00t\00\83\00jd|\00f\83j\83\00}|dkr.tdd|\00\9B\00d\9D\83\00|rL|d\00tjd\00krLtd\83\00|S\00)	a~\00\00Get a post and its author by id.
-
-    Checks that the id exists and optionally that the current user is
-    the author.
-
-    :param id: id of post to get
-    :param check_author: require the current user to be the author
-    :return: the post with author information
-    :raise 404: if a post with the given id doesn't exist
-    :raise 403: if the current user isn't the author
-    z\90SELECT p.id, title, body, created, author_id, username, likes, unlikes, nr_comments FROM post p JOIN user u ON p.author_id = u.id WHERE p.id = ?Ni\94\00\00zPost id z doesn't exist.Z	author_id\DAidi\93\00\00)r
-\00\00\00r\00\00\00r\00\00\00r
-\00\00\00r\00\00\00\DAuser)r(\00\00\00\DAcheck_author\DApostr%\00\00\00r%\00\00\00r&\00\00\00\DAget_post:\00\00\00s\00\00\00\00
-r,\00\00\00Nc\00\00\00\00\00\00\00\00\00\00\00\00\00C\00\00\00s8\00\00\00|dkrt\00\83\00jd|\00f\83j\83\00}nt\00\83\00jd|\00|f\83j\83\00}|S\00)a6\00\00Get comments to a post.
-
-    :param id: id of post to get comments for
-    :comment id: id of a single comment to return
-    :return: the comments with author and date information
-    :return: one comment with author and date information if comment_id is not None
-    :return: None if there're no comments
-    Nz\83SELECT c.id, comment_body, comment_created, u.username, c.user_id FROM comments c JOIN user u ON c.user_id = u.id WHERE post_id = ?z\90SELECT c.id, comment_body, comment_created, u.username, c.user_id FROM comments c JOIN user u ON c.user_id = u.id WHERE post_id = ? AND c.id = ?)r
-\00\00\00r\00\00\00r \00\00\00r\00\00\00)\DApost_id\DA
-comment_id\DAcommentsr%\00\00\00r%\00\00\00r&\00\00\00\DAget_commentsZ\00\00\00s\00\00\00\00	r0\00\00\00c\00\00\00\00\00\00\00\00\00\00\00\00\00C\00\00\00s\00\00\00t\00\83\00jd|\00f\83j\83\00}|S\00)z\8FGet tags of a post.
-
-    :param post_id: id of post to get tags for
-    :return: the tags of post_id
-    :return: None if there're no tags
-    zeSELECT tags.id, tags.tag FROM tags JOIN tagsofposts ON tags.id = tagsofposts.tag_id WHERE post_id = ?)r
-\00\00\00r\00\00\00r \00\00\00)r-\00\00\00\DAtagsr%\00\00\00r%\00\00\00r&\00\00\00\DAget_tags~\00\00\00s\00\00\00\00r2\00\00\00z/create\DAGET\DAPOST)\DAmethodsc\00\00\00\00\00\00\00\00
-\00\00\00\00\00\00\00\00\00s<\00\00t\00jdk\90r4t\00jd\00}\00t\00jd\00}t\00jd\00}d}|\00s6d}td\83\89\00djt\88\00\83\83}t\87\00fd	d
-\84|D\00\83\83rjd|\00}|dk	r|t|\83\00n\B8t\83\00}|j	d|\00|t
-jd
-\00f\83j}|j
-\83\00\00|jd\83}dd\84\00|D\00\83}t|\83\00xb|D\00]Z}|j	d|f\83j\83\00}|dk\90r|j	d|f\83j}	|j
-\83\00\00n|d
-\00}	|j	d|	|f\83\00|j
-\83\00\00q\CAW\00ttd\83\83S\00td\83S\00)z'Create a new post for the current user.r4\00\00\00\DAtitle\DAbodyr1\00\00\00NzTitle is required.z#[]()`?$%/\<>*\FA c\00\00\00\00\00\00\00\00\00\00\00\00\003\00\00\00s\00\00\00|\00]}|\88\00kV\00\00qd\00S\00)Nr%\00\00\00)\DA.0\DAc)\DAforbidden_charsr%\00\00\00r&\00\00\00\FA	<genexpr>\A4\00\00\00s\00\00\00\00zcreate.<locals>.<genexpr>z>This characters %s are not allowed in tags, please remove themz:INSERT INTO post (title, body, author_id) VALUES (?, ?, ?)r(\00\00\00\FA,c\00\00\00\00\00\00\00\00\00\00\00\00\00S\00\00\00s\00\00\00g\00|\00]}|j\00\83\00\91qS\00r%\00\00\00)\DAstrip)r9\00\00\00\DAxr%\00\00\00r%\00\00\00r&\00\00\00\FA
-<listcomp>\B5\00\00\00s\00\00\00\00zcreate.<locals>.<listcomp>zSELECT id FROM tags WHERE tag=?z!INSERT INTO tags (tag) VALUES (?)z6INSERT INTO tagsofposts (tag_id, post_id) VALUES (?,?)z
-blog.indexzblog/create.html)r\00\00\00\DAmethod\DAform\DAset\DAjoin\DAlist\DAanyr\00\00\00r
-\00\00\00r\00\00\00r\00\00\00r)\00\00\00\DA	lastrowid\DAcommit\DAsplit\DAprintr\00\00\00r\00\00\00r	\00\00\00r\00\00\00)
-r6\00\00\00r7\00\00\00r1\00\00\00\DAerror\DAforbidden_chars_nicetxtr!\00\00\00r-\00\00\00\DAtag\DAtag_rowr\00\00\00r%\00\00\00)r;\00\00\00r&\00\00\00\DAcreate\93\00\00\00sH\00\00\00\00
-
-
-
-
-
-
-
-
-
-rO\00\00\00z/<int:id>/updatec\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00s\DC\00\00t\00|\00\83}t|\00\83}g\00}x|D\00]}|j|d\00\83\00qW\00tjdk\90r\C4tjd\00}tjd\00}tjd\00}d}|sfd}td\83\89\00d	jt\88\00\83\83}	t	\87\00fd
-d\84|D\00\83\83r\9Ad|	\00}|dk	r\AEt
-|\83\00\90nt\83\00}
-|
-jd
-|||\00f\83\00|
-j
-\83\00\00|jd\83}dd\84\00|D\00\83}xx|D\00]p}|
-jd|f\83j\83\00}|dk\90r&|
-jd|f\83j}|
-j
-\83\00\00n|d\00}||k\90rR|
-jd||\00f\83\00|
-j
-\83\00\00q\EC|j|\83\00q\ECW\00t|\83dk\90r\B8xH|D\00]@}|
-jd|f\83j\83\00}|d\00}|
-j
-\83\00\00|
-jd|\00|f\83\00|
-j
-\83\00\00\90qtW\00ttd\83\83S\00dj|\83}
-td||
-d\8DS\00)z0Update a post if the current user is the author.rM\00\00\00r4\00\00\00r6\00\00\00r7\00\00\00r1\00\00\00NzTitle is required.z#[]()`?$%/\<>*r8\00\00\00c\00\00\00\00\00\00\00\00\00\00\00\00\003\00\00\00s\00\00\00|\00]}|\88\00kV\00\00qd\00S\00)Nr%\00\00\00)r9\00\00\00r:\00\00\00)r;\00\00\00r%\00\00\00r&\00\00\00r<\00\00\00\EC\00\00\00s\00\00\00\00zupdate.<locals>.<genexpr>z>This characters %s are not allowed in tags, please remove themz0UPDATE post SET title = ?, body = ? WHERE id = ?r=\00\00\00c\00\00\00\00\00\00\00\00\00\00\00\00\00S\00\00\00s\00\00\00g\00|\00]}|j\00\83\00\91qS\00r%\00\00\00)r>\00\00\00)r9\00\00\00r?\00\00\00r%\00\00\00r%\00\00\00r&\00\00\00r@\00\00\00\FA\00\00\00s\00\00\00\00zupdate.<locals>.<listcomp>zSELECT id FROM tags WHERE tag=?z!INSERT INTO tags (tag) VALUES (?)r(\00\00\00z6INSERT INTO tagsofposts (tag_id, post_id) VALUES (?,?)r\00\00\00z!SELECT id FROM tags WHERE tag = ?z8DELETE FROM tagsofposts WHERE post_id = ? AND tag_id = ?z
-blog.indexz, zblog/update.html)r+\00\00\00r1\00\00\00)r,\00\00\00r2\00\00\00\DAappendr\00\00\00rA\00\00\00rB\00\00\00rC\00\00\00rD\00\00\00rE\00\00\00rF\00\00\00r\00\00\00r
-\00\00\00r\00\00\00rH\00\00\00rI\00\00\00r\00\00\00rG\00\00\00\DAremove\DAlenr\00\00\00r	\00\00\00r\00\00\00)r(\00\00\00r+\00\00\00Ztags_of_postZtag_listrM\00\00\00r6\00\00\00r7\00\00\00r1\00\00\00rK\00\00\00rL\00\00\00r!\00\00\00rN\00\00\00r\00\00\00Ztags_stringr%\00\00\00)r;\00\00\00r&\00\00\00\DAupdate\D3\00\00\00sb\00\00\00\00
-
-
-
-
-
-
-
-
-
-
-
-
-
-rS\00\00\00z/<int:id>/deletec\00\00\00\00\00\00\00\00\00\00\00\00\00C\00\00\00s>\00\00\00t\00|\00\83\00t\83\00}|jd|\00f\83\00|jd|\00f\83\00|j\83\00\00ttd\83\83S\00)zpDelete a post.
-
-    Ensures that the post exists and that the logged in user is the
-    author of the post.
-    zDELETE FROM post WHERE id = ?z)DELETE FROM tagsofposts WHERE post_id = ?z
-blog.index)r,\00\00\00r
-\00\00\00r\00\00\00rH\00\00\00r\00\00\00r	\00\00\00)r(\00\00\00r!\00\00\00r%\00\00\00r%\00\00\00r&\00\00\00\DAdelete,\00\00s\00\00\00\00rT\00\00\00z/<int:id>/showc\00\00\00\00\00\00\00\00\00\00\00\00\00C\00\00\00s\A2\00\00\00t\00|\00dd\8D}t|\00\83}t|\00\83}tjdkr\92tjd\00}d}|s<d}|dk	rNt|\83\00n4t\83\00}|jd||\00t	j
-d\00f\83\00|jd	|\00f\83\00|j\83\00\00tt
-d
-|\00d\8D\83S\00td|||d
-\8DS\00)z'Show a post no matter who the author isF)r*\00\00\00r4\00\00\00r7\00\00\00NzNo comment to send.zFINSERT INTO comments (comment_body, post_id, user_id) VALUES (?, ?, ?)r(\00\00\00z4UPDATE post SET nr_comments=nr_comments+1 WHERE id=?z	blog.show)r(\00\00\00zblog/show.html)r+\00\00\00r/\00\00\00r1\00\00\00)r,\00\00\00r0\00\00\00r2\00\00\00r\00\00\00rA\00\00\00rB\00\00\00r\00\00\00r
-\00\00\00r\00\00\00r\00\00\00r)\00\00\00rH\00\00\00r\00\00\00r	\00\00\00r\00\00\00)r(\00\00\00r+\00\00\00r/\00\00\00r1\00\00\00\DAcomment_bodyrK\00\00\00r!\00\00\00r%\00\00\00r%\00\00\00r&\00\00\00\DAshow<\00\00s$\00\00\00\00
-
-
-rV\00\00\00z/<int:id>/show_like\DA	show_like)\DAendpointz/<int:id>/likec\00\00\00\00\00\00\00\00\00\00\00\00\00C\00\00\00s\F0\00\00\00t\00|\00dd\8D}tjd\83}t\83\00}t\83\00jd||\00f\83j\83\00}|dk	rP|d\00dkrPtd\83\00nl|dk	r\94|d\00dkr\94|jd	||\00f\83\00|jd
-|\00f\83\00|j\83\00\00td\83\00n(|jd||\00d
-f\83\00|jd|\00f\83\00|j\83\00\00tt	j
-\83\00dt	j
-kr\E0ttd|\00d\8D\83S\00ttd\83\83S\00dS\00)z
- Like a post F)r*\00\00\00\DAuser_idz5SELECT likes FROM likes WHERE user_id=? AND post_id=?N\DAlikesr\00\00\00zYou already like this post!z/DELETE FROM likes WHERE user_id=? AND post_id=?z,UPDATE post SET unlikes=unlikes-1 WHERE id=?zBYou did not like this post before. Now you're neutral on this postz<INSERT INTO likes (user_id, post_id, likes) VALUES (?, ?, ?)r\00\00\00z(UPDATE post SET likes=likes+1 WHERE id=?rW\00\00\00z
-blog.get_show)r(\00\00\00z
-blog.index)
-r,\00\00\00r\00\00\00r\00\00\00r
-\00\00\00r\00\00\00r\00\00\00r\00\00\00rH\00\00\00rJ\00\00\00r\00\00\00rX\00\00\00r\00\00\00r	\00\00\00)r(\00\00\00r+\00\00\00rY\00\00\00r!\00\00\00rZ\00\00\00r%\00\00\00r%\00\00\00r&\00\00\00\DAlike]\00\00s*\00\00\00\00
-
-
-
-
-
-r[\00\00\00z/<int:id>/show_unlike\DAshow_unlikez/<int:id>/unlikec\00\00\00\00\00\00\00\00\00\00\00\00\00C\00\00\00s\E6\00\00\00t\00|\00dd\8D}tjd\83}t\83\00}t\83\00jd||\00f\83j\83\00}|dk	rP|d\00dkrPtd\83\00nl|dk	r\94|d\00dkr\94|jd	||\00f\83\00|jd
-|\00f\83\00|j\83\00\00td\83\00n(|jd||\00df\83\00|jd
-|\00f\83\00|j\83\00\00dtj	kr\D6t
-td|\00d\8D\83S\00t
-td\83\83S\00dS\00)z Unlike a post F)r*\00\00\00rY\00\00\00z5SELECT likes FROM likes WHERE user_id=? AND post_id=?NrZ\00\00\00r\00\00\00z!You already don't like this post!z/DELETE FROM likes WHERE user_id=? AND post_id=?z(UPDATE post SET likes=likes-1 WHERE id=?z>You did like this post before. Now you're neutral on this postz<INSERT INTO likes (user_id, post_id, likes) VALUES (?, ?, ?)z,UPDATE post SET unlikes=unlikes+1 WHERE id=?r\\00\00\00z
-blog.get_show)r(\00\00\00z
-blog.index)r,\00\00\00r\00\00\00r\00\00\00r
-\00\00\00r\00\00\00r\00\00\00r\00\00\00rH\00\00\00r\00\00\00rX\00\00\00r\00\00\00r	\00\00\00)r(\00\00\00r+\00\00\00rY\00\00\00r!\00\00\00rZ\00\00\00r%\00\00\00r%\00\00\00r&\00\00\00\DAunlike\88\00\00s(\00\00\00\00
-
-
-
-
-r]\00\00\00z/<int:id>/comment_updatec\00\00\00\00\00\00\00\00\00\00\00\00\00C\00\00\00s\B8\00\00\00t\00|\00dd\8D}tjjd\83}t|\00|\83}|d\00tjd\00kr<td\83\00tjdkrTt	d||d	\8DS\00tjd
-kr\B4tj
-d\00}d}|std
-}|dk	r\86t|\83\00nt\83\00}|j
-d||f\83\00|j\83\00\00ttd|\00d\8D\83S\00dS\00)zUpdate a commentF)r*\00\00\00r.\00\00\00rY\00\00\00r(\00\00\00i\93\00\00r3\00\00\00zblog/update_comment.html)r+\00\00\00r/\00\00\00r4\00\00\00r7\00\00\00Nz0Comment is empty, consider deleting your commentz-UPDATE comments SET comment_body=? WHERE id=?z	blog.show)r(\00\00\00)r,\00\00\00r\00\00\00r\00\00\00r\00\00\00r0\00\00\00r\00\00\00r)\00\00\00r
-\00\00\00rA\00\00\00r\00\00\00rB\00\00\00r\00\00\00r
-\00\00\00r\00\00\00rH\00\00\00r\00\00\00r	\00\00\00)r(\00\00\00r+\00\00\00r.\00\00\00\DAcommentrU\00\00\00rK\00\00\00r!\00\00\00r%\00\00\00r%\00\00\00r&\00\00\00\DAcomment_update\B1\00\00s(\00\00\00\00
-
-
-
-
-
-r_\00\00\00z/<int:id>/comment_deletec\00\00\00\00\00\00\00\00\00\00\00\00\00C\00\00\00sj\00\00\00t\00jjd\83}t|\00|\83}|d\00tjd\00kr0td\83\00t\83\00}|jd|f\83\00|jd|\00f\83\00|j	\83\00\00t
-td|\00d\8D\83S\00)	zyDelete a comment.
-
-    Ensures that the comment exists and that the logged in user is the
-    author of the comment.
-    r.\00\00\00rY\00\00\00r(\00\00\00i\93\00\00z!DELETE FROM comments WHERE id = ?z4UPDATE post SET nr_comments=nr_comments-1 WHERE id=?z	blog.show)r(\00\00\00)r\00\00\00r\00\00\00r\00\00\00r0\00\00\00r\00\00\00r)\00\00\00r
-\00\00\00r
-\00\00\00r\00\00\00rH\00\00\00r\00\00\00r	\00\00\00)r(\00\00\00r.\00\00\00r^\00\00\00r!\00\00\00r%\00\00\00r%\00\00\00r&\00\00\00\DAcomment_delete\D5\00\00s\00\00\00\00
-r`\00\00\00z/<int:tag_id>/show_tagc\00\00\00\00\00\00\00\00\00\00\00\00\00C\00\00\00s\90\00\00\00t\00\83\00}td\83\00|jd|\00f\83j\83\00d\00}t|t\00\83}ttjj	ddd\8D\83}t|\83\00||krX|}t}|d\00t\00}|jd|\00||f\83j
-\83\00}td||\00||d	\8DS\00)
-z/Show all the posts associated with tag_id.
-    \DAtestzsSELECT COUNT(*) FROM post p JOIN user u ON p.author_id = u.id JOIN tagsofposts t ON t.tag_id = ? AND t.post_id=p.idr\00\00\00r\00\00\00r\00\00\00)r\00\00\00z\DESELECT p.id, title, body, created, author_id, username, likes, unlikes, nr_comments FROM post p JOIN user u ON p.author_id = u.id JOIN tagsofposts t ON t.tag_id = ? AND t.post_id=p.id ORDER BY created DESC LIMIT ? OFFSET ?zblog/index.html)r\00\00\00r\00\00\00r\00\00\00r\00\00\00)r
-\00\00\00rJ\00\00\00r\00\00\00r\00\00\00r\00\00\00r\00\00\00r\00\00\00r\00\00\00r\00\00\00r\00\00\00r \00\00\00r\00\00\00)r\00\00\00r!\00\00\00r"\00\00\00r\00\00\00r\00\00\00r#\00\00\00r$\00\00\00r\00\00\00r%\00\00\00r%\00\00\00r&\00\00\00\DAshow_tag\EE\00\00s"\00\00\00\00
-rb\00\00\00z/searchc\00\00\00\00\00\00\00\00\00\00\00\00\00\00C\00\00\00s\F2\00\00\00t\00jdkrjt\00jd\00}\00|\00dkr(ttd\83\83S\00|\00td<\00|\00jdd\83}\00|\00jdd\83}\00d|\00\00d\00}\00|\00jd	d\83}\00|\00td
-<\00ntd
-\00}\00t\83\00}|jd|\00f\83j	\83\00d\00}t
-|t\00\83}tt\00j
-jd
-dd\8D\83}||kr\BA|}t}|d\00t\00}|jd|\00||f\83j\83\00}td|d||d\8DS\00)z*Show all the posts corresponding to searchr4\00\00\00Z	searchboxr\00\00\00z
-blog.indexr\00\00\00\DA*\FA%r8\00\00\00z%%r\00\00\00zLSELECT COUNT(*) FROM post p JOIN user u ON author_id=u.id WHERE title LIKE ?r\00\00\00r\00\00\00r\00\00\00)r\00\00\00z\B7SELECT p.id, title, body, created, author_id, username, likes, unlikes, nr_comments FROM post p JOIN user u ON author_id=u.id WHERE title LIKE ? ORDER BY created DESC LIMIT ? OFFSET ?zblog/index.htmlN)r\00\00\00r\00\00\00r\00\00\00r\00\00\00)r\00\00\00rA\00\00\00rB\00\00\00r\00\00\00r	\00\00\00r\00\00\00\DAreplacer
-\00\00\00r\00\00\00r\00\00\00r\00\00\00r\00\00\00r\00\00\00r\00\00\00r\00\00\00r \00\00\00r\00\00\00)\DAsearchr!\00\00\00r"\00\00\00r\00\00\00r\00\00\00r#\00\00\00r$\00\00\00r\00\00\00r%\00\00\00r%\00\00\00r&\00\00\00rf\00\00\00\00\00s4\00\00\00\00
-
-
-
-rf\00\00\00)T)N)r3\00\00\00r4\00\00\00)r3\00\00\00r4\00\00\00)r4\00\00\00)r3\00\00\00r4\00\00\00)r3\00\00\00)r3\00\00\00)r3\00\00\00r4\00\00\00)#\DAflaskr\00\00\00r\00\00\00r\00\00\00r\00\00\00r\00\00\00r\00\00\00r\00\00\00r	\00\00\00Zwerkzeug.exceptionsr
-\00\00\00\DAmathr\00\00\00Zflaskr.authr\00\00\00Z	flaskr.dbr
-\00\00\00\DA__name__\DAbpr\00\00\00\DArouter'\00\00\00r,\00\00\00r0\00\00\00r2\00\00\00rO\00\00\00rS\00\00\00rT\00\00\00rV\00\00\00r[\00\00\00r]\00\00\00r_\00\00\00r`\00\00\00rb\00\00\00rf\00\00\00r%\00\00\00r%\00\00\00r%\00\00\00r&\00\00\00\DA<module>\00\00\00sJ\00\00\00
-%
- 
-$?X!)'#'
