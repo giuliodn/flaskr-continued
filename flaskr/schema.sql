@@ -21,6 +21,7 @@ CREATE TABLE post (
   body TEXT NOT NULL DEFAULT 0,
   likes INTEGER DEFAULT 0,
   unlikes INTEGER DEFAULT 0,
+  nr_comments INTEGER DEFAULT 0,
   FOREIGN KEY (author_id) REFERENCES user (id)
 );
 
@@ -29,6 +30,16 @@ CREATE TABLE likes (
   user_id INTEGER NOT NULL,
   post_id INTEGER NOT NULL,
   likes BOOLEAN,
+  FOREIGN KEY (user_id) REFERENCES user (id),
+  FOREIGN KEY (post_id) REFERENCES post (id)
+);
+
+CREATE TABLE IF NOT EXISTS comments (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL,
+  post_id INTEGER NOT NULL,
+  comment_body TEXT NOT NULL DEFAULT 0,
+  comment_created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (user_id) REFERENCES user (id),
   FOREIGN KEY (post_id) REFERENCES post (id)
 );
