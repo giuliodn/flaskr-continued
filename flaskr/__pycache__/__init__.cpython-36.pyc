@@ -1,17 +1,0 @@
-3
-
-8\B9_`\AF\00\00\E3\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00@\00\00\00s"\00\00\00d\00dl\00Z\00d\00dlmZ\00ddd\84ZdS\00)\E9\00\00\00\00N)\DAFlaskc\00\00\00\00\00\00\00\00\00\00\00\00\00C\00\00\00s\D6\00\00\00t\00tdd\8D}|jjdtjj|jd\83d\8D\00|\00dkrB|jjddd\8D\00n|jj	|\00\83\00ytj
-|j\83\00W\00n\00tk
-rr\00\00\00Y\00nX\00|jd	\83d
-d\84\00\83}dd
-l
-m}\00|j|\83\00ddl
-m}m}\00|j|j\83\00|j|j\83\00|jddd\8D\00|S\00)z:Create and configure an instance of the Flask application.T)\DAinstance_relative_config\DAdevz
-flaskr.sqlite)\DA
-SECRET_KEYZDATABASENz	config.py)\DAsilentz/helloc\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00S\00\00\00s\00\00\00dS\00)Nz
-Hello, World!\A9\00r\00\00\00r\00\00\00r\00\00\00\FA7/home/giulio/python/flaskr_continued/flaskr/__init__.py\DAhello\00\00\00s\00\00\00\00zcreate_app.<locals>.hellor\00\00\00)\DAdb)\DAauth\DAblog\FA/\DAindex)\DAendpoint)r\00\00\00\DA__name__\DAconfig\DAfrom_mapping\DAos\DApath\DAjoin\DA
-instance_path\DAfrom_pyfile\DAupdate\DAmakedirs\DAOSError\DArouteZflaskrr
-\00\00\00Zinit_appr\00\00\00r\00\00\00\DAregister_blueprint\DAbp\DAadd_url_rule)Ztest_config\DAappr	\00\00\00r
-\00\00\00r\00\00\00r\00\00\00r\00\00\00r\00\00\00r\00\00\00\DA
-create_app\00\00\00s&\00\00\00\00
-r \00\00\00)N)r\00\00\00\DAflaskr\00\00\00r \00\00\00r\00\00\00r\00\00\00r\00\00\00r\00\00\00\DA<module>\00\00\00s\00\00\00\00\00\00\00
