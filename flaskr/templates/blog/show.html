@@ -15,6 +15,9 @@
         <a class="action" href="{{ url_for('blog.update', id=post['id']) }}">Edit</a>
       {% endif %}
     </header>
+    {% if post['image'] != '' %}
+      <img src="{{ url_for('.uploaded_image', filename=post['image'])}}">
+    {% endif %}
     <p class="body">{{ post['body'] }}</p>
     <p class="about">{{ post['likes'] }}   <a class="action" href="{{ url_for('.show_like', id=post['id']) }}">likes</a>, 
                      {{ post['unlikes'] }} <a class="action" href="{{ url_for('.show_unlike', id=post['id']) }}">unlikes</a>,
