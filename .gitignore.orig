@@ -1,0 +1,8 @@
+vscode*
+<<<<<<< HEAD
+UNKNOWN.egg.-info/
+=======
+UNKNOWN.egg-info/
+>>>>>>> flaskrc/part2
+instance/
+venv/
