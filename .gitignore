@@ -2,3 +2,4 @@ vscode*
 UNKNOWN.egg.-info/
 instance/
 venv/
+__pycache__/
