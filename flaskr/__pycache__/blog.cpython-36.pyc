@@ -1,103 +1,0 @@
-3
-
-\B9_`w)\00\00\E3\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00@\00\00\00s\9C\00\00d\00dl\00mZ\00d\00dl\00mZ\00d\00dl\00mZ\00d\00dl\00mZ\00d\00dl\00mZ\00d\00dl\00mZ\00d\00dl\00mZ\00d\00dl\00mZ\00d\00d	l	m
-Z
-\00d\00d
-lmZ\00d\00dl
-mZ\00ede\83Zejd
-\83dd\84\00\83Zd6dd\84Zd7dd\84Zejdd8d\8Dedd\84\00\83\83Zejdd9d\8Dedd\84\00\83\83Zejdd:d\8Ded d!\84\00\83\83Zejd"ddgd\8Dd#d$\84\00\83Zejd%d&d'\8Dejd(\83ed)d*\84\00\83\83\83Zejd+d,d'\8Dejd-\83ed.d/\84\00\83\83\83Zejd0d;d\8Ded1d2\84\00\83\83Zejd3d<d\8Ded4d5\84\00\83\83ZdS\00)=\E9\00\00\00\00)\DA	Blueprint)\DAflash)\DAg)\DAredirect)\DArender_template)\DArequest)\DAsession)\DAurl_for)\DAabort)\DAlogin_required)\DAget_db\DAblog\FA/c\00\00\00\00\00\00\00\00\00\00\00\00\00\00C\00\00\00s \00\00\00t\00\83\00}\00|\00jd\83j\83\00}td|d\8DS\00)z&Show all the posts, most recent first.z\97SELECT p.id, title, body, created, author_id, username, likes, unlikes, nr_comments FROM post p JOIN user u ON p.author_id = u.id ORDER BY created DESCzblog/index.html)\DAposts)r\00\00\00\DAexecute\DAfetchallr\00\00\00)\DAdbr\00\00\00\A9\00r\00\00\00\FA3/home/giulio/python/flaskr_continued/flaskr/blog.py\DAindex\00\00\00s\00\00\00\00
-r\00\00\00Tc\00\00\00\00\00\00\00\00\00\00\00\00\00C\00\00\00sP\00\00\00t\00\83\00jd|\00f\83j\83\00}|dkr.tdd|\00\9B\00d\9D\83\00|rL|d\00tjd\00krLtd\83\00|S\00)	a~\00\00Get a post and its author by id.
-
-    Checks that the id exists and optionally that the current user is
-    the author.
-
-    :param id: id of post to get
-    :param check_author: require the current user to be the author
-    :return: the post with author information
-    :raise 404: if a post with the given id doesn't exist
-    :raise 403: if the current user isn't the author
-    z\90SELECT p.id, title, body, created, author_id, username, likes, unlikes, nr_comments FROM post p JOIN user u ON p.author_id = u.id WHERE p.id = ?Ni\94\00\00zPost id z doesn't exist.Z	author_id\DAidi\93\00\00)r\00\00\00r\00\00\00\DAfetchoner
-\00\00\00r\00\00\00\DAuser)r\00\00\00\DAcheck_author\DApostr\00\00\00r\00\00\00r\00\00\00\DAget_post\00\00\00s\00\00\00\00
-r\00\00\00Nc\00\00\00\00\00\00\00\00\00\00\00\00\00C\00\00\00s8\00\00\00|dkrt\00\83\00jd|\00f\83j\83\00}nt\00\83\00jd|\00|f\83j\83\00}|S\00)a6\00\00Get comments to a post.
-
-    :param id: id of post to get comments for
-    :comment id: id of a single comment to return
-    :return: the comments with author and date information
-    :return: one comment with author and date information if comment_id is not None
-    :return: None if there're no comments
-    Nz\83SELECT c.id, comment_body, comment_created, u.username, c.user_id FROM comments c JOIN user u ON c.user_id = u.id WHERE post_id = ?z\90SELECT c.id, comment_body, comment_created, u.username, c.user_id FROM comments c JOIN user u ON c.user_id = u.id WHERE post_id = ? AND c.id = ?)r\00\00\00r\00\00\00r\00\00\00r\00\00\00)Zpost_id\DA
-comment_id\DAcommentsr\00\00\00r\00\00\00r\00\00\00\DAget_comments=\00\00\00s\00\00\00\00	r\00\00\00z/create\DAGET\DAPOST)\DAmethodsc\00\00\00\00\00\00\00\00\00\00\00\00\00\00C\00\00\00sv\00\00\00t\00jdkrnt\00jd\00}\00t\00jd\00}d}|\00s*d}|dk	r<t|\83\00n2t\83\00}|jd|\00|tjd\00f\83\00|j\83\00\00t	t
-d\83\83S\00td	\83S\00)
-z'Create a new post for the current user.r \00\00\00\DAtitle\DAbodyNzTitle is required.z:INSERT INTO post (title, body, author_id) VALUES (?, ?, ?)r\00\00\00z
-blog.indexzblog/create.html)r\00\00\00\DAmethod\DAformr\00\00\00r\00\00\00r\00\00\00r\00\00\00r\00\00\00\DAcommitr\00\00\00r	\00\00\00r\00\00\00)r"\00\00\00r#\00\00\00\DAerrorr\00\00\00r\00\00\00r\00\00\00r\00\00\00\DAcreatec\00\00\00s\00\00\00\00
-
-
-
-r(\00\00\00z/<int:id>/updatec\00\00\00\00\00\00\00\00\00\00\00\00\00C\00\00\00s|\00\00\00t\00|\00\83}tjdkrptjd\00}tjd\00}d}|s2d}|dk	rDt|\83\00n,t\83\00}|jd|||\00f\83\00|j\83\00\00tt	d\83\83S\00t
-d|d	\8DS\00)
-z0Update a post if the current user is the author.r \00\00\00r"\00\00\00r#\00\00\00NzTitle is required.z0UPDATE post SET title = ?, body = ? WHERE id = ?z
-blog.indexzblog/update.html)r\00\00\00)r\00\00\00r\00\00\00r$\00\00\00r%\00\00\00r\00\00\00r\00\00\00r\00\00\00r&\00\00\00r\00\00\00r	\00\00\00r\00\00\00)r\00\00\00r\00\00\00r"\00\00\00r#\00\00\00r'\00\00\00r\00\00\00r\00\00\00r\00\00\00r\00\00\00\DAupdate}\00\00\00s\00\00\00\00
-
-
-
-r)\00\00\00z/<int:id>/deletec\00\00\00\00\00\00\00\00\00\00\00\00\00C\00\00\00s0\00\00\00t\00|\00\83\00t\83\00}|jd|\00f\83\00|j\83\00\00ttd\83\83S\00)zpDelete a post.
-
-    Ensures that the post exists and that the logged in user is the
-    author of the post.
-    zDELETE FROM post WHERE id = ?z
-blog.index)r\00\00\00r\00\00\00r\00\00\00r&\00\00\00r\00\00\00r	\00\00\00)r\00\00\00r\00\00\00r\00\00\00r\00\00\00r\00\00\00\DAdelete\98\00\00\00s
-\00\00\00\00r*\00\00\00z/<int:id>/showc\00\00\00\00\00\00\00\00\00\00\00\00\00C\00\00\00s\98\00\00\00t\00|\00dd\8D}t|\00\83}tjdkr\8Atjd\00}d}|s4d}|dk	rFt|\83\00n4t\83\00}|jd||\00tj	d\00f\83\00|jd	|\00f\83\00|j
-\83\00\00ttd
-|\00d\8D\83S\00t
-d||d
-\8DS\00)z'Show a post no matter who the author isF)r\00\00\00r \00\00\00r#\00\00\00NzNo comment to send.zFINSERT INTO comments (comment_body, post_id, user_id) VALUES (?, ?, ?)r\00\00\00z4UPDATE post SET nr_comments=nr_comments+1 WHERE id=?z	blog.show)r\00\00\00zblog/show.html)r\00\00\00r\00\00\00)r\00\00\00r\00\00\00r\00\00\00r$\00\00\00r%\00\00\00r\00\00\00r\00\00\00r\00\00\00r\00\00\00r\00\00\00r&\00\00\00r\00\00\00r	\00\00\00r\00\00\00)r\00\00\00r\00\00\00r\00\00\00\DAcomment_bodyr'\00\00\00r\00\00\00r\00\00\00r\00\00\00r\00\00\00\DAshow\A7\00\00\00s"\00\00\00\00
-
-
-r,\00\00\00z/<int:id>/show_like\DA	show_like)\DAendpointz/<int:id>/likec\00\00\00\00\00\00\00\00\00\00\00\00\00C\00\00\00s\F0\00\00\00t\00|\00dd\8D}tjd\83}t\83\00}t\83\00jd||\00f\83j\83\00}|dk	rP|d\00dkrPtd\83\00nl|dk	r\94|d\00dkr\94|jd	||\00f\83\00|jd
-|\00f\83\00|j\83\00\00td\83\00n(|jd||\00d
-f\83\00|jd|\00f\83\00|j\83\00\00tt	j
-\83\00dt	j
-kr\E0ttd|\00d\8D\83S\00ttd\83\83S\00dS\00)z
- Like a post F)r\00\00\00\DAuser_idz5SELECT likes FROM likes WHERE user_id=? AND post_id=?N\DAlikesr\00\00\00zYou already like this post!z/DELETE FROM likes WHERE user_id=? AND post_id=?z,UPDATE post SET unlikes=unlikes-1 WHERE id=?zBYou did not like this post before. Now you're neutral on this postz<INSERT INTO likes (user_id, post_id, likes) VALUES (?, ?, ?)\E9\00\00\00z(UPDATE post SET likes=likes+1 WHERE id=?r-\00\00\00z
-blog.get_show)r\00\00\00z
-blog.index)
-r\00\00\00r\00\00\00\DAgetr\00\00\00r\00\00\00r\00\00\00r\00\00\00r&\00\00\00\DAprintr\00\00\00r.\00\00\00r\00\00\00r	\00\00\00)r\00\00\00r\00\00\00r/\00\00\00r\00\00\00r0\00\00\00r\00\00\00r\00\00\00r\00\00\00\DAlike\C7\00\00\00s*\00\00\00\00
-
-
-
-
-
-r4\00\00\00z/<int:id>/show_unlike\DAshow_unlikez/<int:id>/unlikec\00\00\00\00\00\00\00\00\00\00\00\00\00C\00\00\00s\E6\00\00\00t\00|\00dd\8D}tjd\83}t\83\00}t\83\00jd||\00f\83j\83\00}|dk	rP|d\00dkrPtd\83\00nl|dk	r\94|d\00dkr\94|jd	||\00f\83\00|jd
-|\00f\83\00|j\83\00\00td\83\00n(|jd||\00df\83\00|jd
-|\00f\83\00|j\83\00\00dtj	kr\D6t
-td|\00d\8D\83S\00t
-td\83\83S\00dS\00)z Unlike a post F)r\00\00\00r/\00\00\00z5SELECT likes FROM likes WHERE user_id=? AND post_id=?Nr0\00\00\00r\00\00\00z!You already don't like this post!z/DELETE FROM likes WHERE user_id=? AND post_id=?z(UPDATE post SET likes=likes-1 WHERE id=?z>You did like this post before. Now you're neutral on this postz<INSERT INTO likes (user_id, post_id, likes) VALUES (?, ?, ?)z,UPDATE post SET unlikes=unlikes+1 WHERE id=?r5\00\00\00z
-blog.get_show)r\00\00\00z
-blog.index)r\00\00\00r\00\00\00r2\00\00\00r\00\00\00r\00\00\00r\00\00\00r\00\00\00r&\00\00\00r\00\00\00r.\00\00\00r\00\00\00r	\00\00\00)r\00\00\00r\00\00\00r/\00\00\00r\00\00\00r0\00\00\00r\00\00\00r\00\00\00r\00\00\00\DAunlike\F2\00\00\00s(\00\00\00\00
-
-
-
-
-r6\00\00\00z/<int:id>/comment_updatec\00\00\00\00\00\00\00\00\00\00\00\00\00C\00\00\00s\B8\00\00\00t\00|\00dd\8D}tjjd\83}t|\00|\83}|d\00tjd\00kr<td\83\00tjdkrTt	d||d	\8DS\00tjd
-kr\B4tj
-d\00}d}|std
-}|dk	r\86t|\83\00nt\83\00}|j
-d||f\83\00|j\83\00\00ttd|\00d\8D\83S\00dS\00)zUpdate a commentF)r\00\00\00r\00\00\00r/\00\00\00r\00\00\00i\93\00\00r\00\00\00zblog/update_comment.html)r\00\00\00r\00\00\00r \00\00\00r#\00\00\00Nz0Comment is empty, consider deleting your commentz-UPDATE comments SET comment_body=? WHERE id=?z	blog.show)r\00\00\00)r\00\00\00r\00\00\00\DAargsr2\00\00\00r\00\00\00r\00\00\00r\00\00\00r
-\00\00\00r$\00\00\00r\00\00\00r%\00\00\00r\00\00\00r\00\00\00r\00\00\00r&\00\00\00r\00\00\00r	\00\00\00)r\00\00\00r\00\00\00r\00\00\00\DAcommentr+\00\00\00r'\00\00\00r\00\00\00r\00\00\00r\00\00\00r\00\00\00\DAcomment_update\00\00s(\00\00\00\00
-
-
-
-
-
-r9\00\00\00z/<int:id>/comment_deletec\00\00\00\00\00\00\00\00\00\00\00\00\00C\00\00\00sj\00\00\00t\00jjd\83}t|\00|\83}|d\00tjd\00kr0td\83\00t\83\00}|jd|f\83\00|jd|\00f\83\00|j	\83\00\00t
-td|\00d\8D\83S\00)	zyDelete a comment.
-
-    Ensures that the comment exists and that the logged in user is the
-    author of the comment.
-    r\00\00\00r/\00\00\00r\00\00\00i\93\00\00z!DELETE FROM comments WHERE id = ?z4UPDATE post SET nr_comments=nr_comments-1 WHERE id=?z	blog.show)r\00\00\00)r\00\00\00r7\00\00\00r2\00\00\00r\00\00\00r\00\00\00r\00\00\00r
-\00\00\00r\00\00\00r\00\00\00r&\00\00\00r\00\00\00r	\00\00\00)r\00\00\00r\00\00\00r8\00\00\00r\00\00\00r\00\00\00r\00\00\00r\00\00\00\DAcomment_delete?\00\00s\00\00\00\00
-r:\00\00\00)T)N)r\00\00\00r \00\00\00)r\00\00\00r \00\00\00)r \00\00\00)r\00\00\00r \00\00\00)r\00\00\00)\DAflaskr\00\00\00r\00\00\00r\00\00\00r\00\00\00r\00\00\00r\00\00\00r\00\00\00r	\00\00\00Zwerkzeug.exceptionsr
-\00\00\00Zflaskr.authr\00\00\00Z	flaskr.dbr\00\00\00\DA__name__\DAbp\DArouter\00\00\00r\00\00\00r\00\00\00r(\00\00\00r)\00\00\00r*\00\00\00r,\00\00\00r4\00\00\00r6\00\00\00r9\00\00\00r:\00\00\00r\00\00\00r\00\00\00r\00\00\00r\00\00\00\DA<module>\00\00\00s>\00\00\00
-
- 
-& )'#
