@@ -19,7 +19,11 @@ def index():
     """Show all the posts, most recent first."""
     db = get_db()
     posts = db.execute(
+<<<<<<< HEAD
+        "SELECT p.id, title, body, created, author_id, username, likes, unlikes"
+=======
         "SELECT p.id, title, body, created, author_id, username, likes, unlikes, nr_comments"
+>>>>>>> flaskrc/part2
         " FROM post p JOIN user u ON p.author_id = u.id"
         " ORDER BY created DESC"
     ).fetchall()
@@ -41,7 +45,11 @@ def get_post(id, check_author=True):
     post = (
         get_db()
         .execute(
+<<<<<<< HEAD
+            "SELECT p.id, title, body, created, author_id, username, likes, unlikes"
+=======
             "SELECT p.id, title, body, created, author_id, username, likes, unlikes, nr_comments"
+>>>>>>> flaskrc/part2
             " FROM post p JOIN user u ON p.author_id = u.id"
             " WHERE p.id = ?",
             (id,),
@@ -57,6 +65,8 @@ def get_post(id, check_author=True):
 
     return post
 
+<<<<<<< HEAD
+=======
 
 def get_comments(post_id, comment_id=None):
     """Get comments to a post.
@@ -96,6 +106,7 @@ def get_comments(post_id, comment_id=None):
 
 
 
+>>>>>>> flaskrc/part2
 @bp.route("/create", methods=("GET", "POST"))
 @login_required
 def create():
@@ -164,6 +175,13 @@ def delete(id):
     return redirect(url_for("blog.index"))
 
 
+<<<<<<< HEAD
+@bp.route("/<int:id>/show")
+def show(id):
+    """Show a post no matter who the author is"""
+    post = get_post(id, check_author=False)
+    return render_template("blog/show.html", post=post)
+=======
 @bp.route("/<int:id>/show", methods=["GET", "POST"])
 def show(id):
     """Show a post no matter who the author is"""
@@ -194,6 +212,7 @@ def show(id):
 
     # The method is "GET": just show the page
     return render_template("blog/show.html", post=post, comments=comments)
+>>>>>>> flaskrc/part2
 
 
 @bp.route("/<int:id>/show_like", endpoint='show_like')
@@ -235,7 +254,11 @@ def like(id):
     print(request.endpoint)
 
     if 'show_like' in request.endpoint:
+<<<<<<< HEAD
+        return redirect(url_for("blog.show", id=id))
+=======
         return redirect(url_for("blog.get_show", id=id))
+>>>>>>> flaskrc/part2
     else:
         return redirect(url_for("blog.index"))
 
@@ -276,6 +299,11 @@ def unlike(id):
         db.commit()
 
     if 'show_unlike' in request.endpoint:
+<<<<<<< HEAD
+        return redirect(url_for("blog.show", id=id))
+    else:
+        return redirect(url_for("blog.index"))
+=======
         return redirect(url_for("blog.get_show", id=id))
     else:
         return redirect(url_for("blog.index"))
@@ -339,3 +367,4 @@ def comment_delete(id):
     db.commit()
 
     return redirect(url_for("blog.show", id=id))
+>>>>>>> flaskrc/part2

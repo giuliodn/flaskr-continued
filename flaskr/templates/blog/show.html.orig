@@ -18,6 +18,10 @@
     <p class="body">{{ post['body'] }}</p>
     <p class="about">{{ post['likes'] }}   <a class="action" href="{{ url_for('.show_like', id=post['id']) }}">likes</a>, 
                      {{ post['unlikes'] }} <a class="action" href="{{ url_for('.show_unlike', id=post['id']) }}">unlikes</a>,
+<<<<<<< HEAD
+                    </p>
+
+=======
                      {{ post['nr_comments'] }} <a>comments</a>
                     </p>
 
@@ -46,5 +50,6 @@
   </form>
                
 
+>>>>>>> flaskrc/part2
   </article>
 {% endblock %}

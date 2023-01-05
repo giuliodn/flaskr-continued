@@ -21,7 +21,10 @@ CREATE TABLE post (
   body TEXT NOT NULL DEFAULT 0,
   likes INTEGER DEFAULT 0,
   unlikes INTEGER DEFAULT 0,
+<<<<<<< HEAD
+=======
   nr_comments INTEGER DEFAULT 0,
+>>>>>>> flaskrc/part2
   FOREIGN KEY (author_id) REFERENCES user (id)
 );
 
@@ -33,6 +36,8 @@ CREATE TABLE likes (
   FOREIGN KEY (user_id) REFERENCES user (id),
   FOREIGN KEY (post_id) REFERENCES post (id)
 );
+<<<<<<< HEAD
+=======
 
 CREATE TABLE IF NOT EXISTS comments (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -43,3 +48,4 @@ CREATE TABLE IF NOT EXISTS comments (
   FOREIGN KEY (user_id) REFERENCES user (id),
   FOREIGN KEY (post_id) REFERENCES post (id)
 );
+>>>>>>> flaskrc/part2
