@@ -7,23 +7,52 @@ from flask import request
 from flask import session
 from flask import url_for
 from werkzeug.exceptions import abort
+from math import ceil
 
 from flaskr.auth import login_required
 from flaskr.db import get_db
 
 bp = Blueprint("blog", __name__)
 
+# Hardcoding posts per page
+POSTS_PER_PAGE = 5
+
 
 @bp.route("/")
 def index():
     """Show all the posts, most recent first."""
+
+    # Reset previous searches
+    session['search_string'] = ''
+    session['user_search'] = ''
+
     db = get_db()
+
+    # Count all pertinent posts
+    total_posts = db.execute("SELECT COUNT(*) FROM POST").fetchone()[0]
+
+    # Count all pages
+    pages = ceil(total_posts / POSTS_PER_PAGE)
+
+    # Page requested by user: page=1 if none requested
+    page = int(request.args.get('page', default=1))
+    
+    # Check if page exceedes total pages
+    # Should not be the case, but prevents misuse
+    if page > pages:
+        page = pages
+
+    limit = POSTS_PER_PAGE
+    offset = (page-1) * POSTS_PER_PAGE
+
     posts = db.execute(
         "SELECT p.id, title, body, created, author_id, username, likes, unlikes, nr_comments"
         " FROM post p JOIN user u ON p.author_id = u.id"
-        " ORDER BY created DESC"
+        " ORDER BY created DESC LIMIT ? OFFSET ?",
+        (limit, offset),
     ).fetchall()
-    return render_template("blog/index.html", posts=posts)
+    
+    return render_template("blog/index.html", posts=posts, tag_id=None, page=page, pages=pages)
 
 
 def get_post(id, check_author=True):
@@ -467,11 +496,92 @@ def show_tag(tag_id):
     """Show all the posts associated with tag_id.
     """
     db = get_db()
+    print('test')
+
+    # Count all pertinent posts
+    total_posts = db.execute(
+        "SELECT COUNT(*)"
+        " FROM post p JOIN user u ON p.author_id = u.id"
+        " JOIN tagsofposts t ON t.tag_id = ? AND t.post_id=p.id",
+        (tag_id, ),
+    ).fetchone()[0]
+
+    # Count all pages
+    pages = ceil(total_posts / POSTS_PER_PAGE)
+
+    # Page requested by user: page=1 if none requested
+    page = int(request.args.get('page', default=1))
+    print(page)
+
+    # Check if page exceedes total pages
+    # Should not be the case, but prevents misuse
+    if page > pages:
+        page = pages
+
+    limit = POSTS_PER_PAGE
+    offset = (page-1) * POSTS_PER_PAGE
+
     posts = db.execute(
         "SELECT p.id, title, body, created, author_id, username, likes, unlikes, nr_comments"
         " FROM post p JOIN user u ON p.author_id = u.id"
         " JOIN tagsofposts t ON t.tag_id = ? AND t.post_id=p.id"
-        " ORDER BY created DESC",
-        (tag_id, )
+        " ORDER BY created DESC LIMIT ? OFFSET ?",
+        (tag_id, limit, offset)
     ).fetchall()
-    return render_template("blog/index.html", posts=posts)
+    return render_template("blog/index.html", posts=posts, tag_id=tag_id, page=page, pages=pages)
+
+@bp.route("/search", methods=("GET", "POST"))
+def search():
+    """Show all the posts corresponding to search"""
+
+    if request.method == 'POST':
+        search = request.form['searchbox']
+        if search == '':
+            # User reset search
+            return redirect(url_for("blog.index"))
+        # Save user input for later display
+        session['user_search'] = search
+        # Format search string to be used by SQL query
+        search = search.replace('*', '%')
+        search = search.replace(' ', '%')
+        search = '%' + search + '%'
+        search = search.replace(r'%%', '%')
+        session['search_string'] = search
+    else:
+        # search = request.args.get('search', default=None)
+        search = session['search_string']
+
+    db = get_db()
+
+    # Count all pertinent posts
+    total_posts = db.execute(
+        "SELECT COUNT(*)"
+        " FROM post p JOIN user u ON author_id=u.id"
+        " WHERE title LIKE ?", 
+        (search, ),
+    ).fetchone()[0]
+
+    # Count all pages
+    pages = ceil(total_posts / POSTS_PER_PAGE)
+
+    # Page requested by user: page=1 if none requested
+    page = int(request.args.get('page', default=1))
+
+    # Check if page exceedes total pages
+    # Should not be the case, but prevents misuse
+    if page > pages:
+        page = pages
+
+    limit = POSTS_PER_PAGE
+    offset = (page-1) * POSTS_PER_PAGE
+
+    posts = db.execute(
+        "SELECT p.id, title, body, created, author_id, username, likes, unlikes, nr_comments"
+        " FROM post p JOIN user u ON author_id=u.id"
+        " WHERE title LIKE ?"
+        " ORDER BY created DESC LIMIT ? OFFSET ?",
+        (search, limit, offset),
+    ).fetchall()
+    
+    return render_template("blog/index.html", posts=posts, tag_id=None, page=page, pages=pages)
+
