@@ -1,5 +1,5 @@
 # Flaskr... continued
-Flaskr (Flask tutorial) continued...  with homework
+Flaskr (Flask tutorial) continued...  with homework.
 
 This repository pick up from where flask tutorial ([the Flaskr blog application](https://flask.palletsprojects.com/en/1.1.x/tutorial/) ) left up. You can find the original git repository [here](https://github.com/pallets/flask/tree/1.1.2/examples/tutorial)
 
