@@ -2,30 +2,64 @@
 
 {% block header %}
   <h1>{% block title %}Posts{% endblock %}</h1>
+  <form class="searchform" action="{{ url_for('blog.search')}}" method="post">
+    <input type="text" name="searchbox" placeholder="Search.." value="{{ session['user_search'] }}">
+  </form>
   {% if g.user %}
     <a class="action" href="{{ url_for('blog.create') }}">New</a>
   {% endif %}
 {% endblock %}
 
 {% block content %}
-  {% for post in posts %}
-    <article class="post">
-      <header>
-        <div>
-          <h1><a href="{{ url_for('blog.show', id=post['id']) }}">{{ post['title'] }}</a></h1>
-          <div class="about">by {{ post['username'] }} on {{ post['created'].strftime('%Y-%m-%d') }}</div>
-        </div>
-        {% if g.user['id'] == post['author_id'] %}
-          <a class="action" href="{{ url_for('blog.update', id=post['id']) }}">Edit</a>
-        {% endif %}
-      </header>
-      <p class="body">{{ post['body'] }}</p>
-      <p class="about">{{ post['likes'] }}   <a class="action" href="{{ url_for('.like', id=post['id']) }}">likes</a>, 
-                       {{ post['unlikes'] }} <a class="action" href="{{ url_for('.unlike', id=post['id']) }}">unlikes</a>, 
-                      </p>
-    </article>
-    {% if not loop.last %}
+  {% if not posts|length %}
+    <p> Sorry, no post to show...</p>
+  {% else %}
+    {% for post in posts %}
+      <article class="post">
+        <header>
+          <div>
+            <h1><a href="{{ url_for('blog.show', id=post['id']) }}">{{ post['title'] }}</a></h1>
+            <div class="about">by {{ post['username'] }} on {{ post['created'].strftime('%Y-%m-%d') }}</div>
+          </div>
+          {% if g.user['id'] == post['author_id'] %}
+            <a class="action" href="{{ url_for('blog.update', id=post['id']) }}">Edit</a>
+          {% endif %}
+        </header>
+        <p class="body">{{ post['body'] }}</p>
+        <p class="about">{{ post['likes'] }}   <a class="action" href="{{ url_for('.like', id=post['id']) }}">likes</a>, 
+                        {{ post['unlikes'] }} <a class="action" href="{{ url_for('.unlike', id=post['id']) }}">unlikes</a>, 
+                        {{ post['nr_comments'] }} <a class="action" href="{{ url_for('blog.show', id=post['id']) }}">comments</a>
+                        </p>
+      </article>
+      {% if not loop.last %}
+        <hr>
+      {% endif %}
+    {% endfor %}
+    {% if pages > 1 %}
       <hr>
+      <div class="pagination">
+        {% if page > 1 %}
+          <a href="{{ url_for(request.endpoint, page = page-1, tag_id=tag_id) }}">&laquo;</a>
+        {% endif %}
+
+        <!-- Loop through the number of pages to display a link for each-->
+        {% for page_n in range([page-2, 1]|max, [page+3, pages+1]|min) %}
+          {% if page_n == page %}
+            <a class="active">{{page_n}}</a>
+          {% else %}
+            <a href="{{ url_for(request.endpoint, page=page_n, tag_id=tag_id) }}">{{page_n}}</a>
+          {% endif %}
+        {% endfor %}
+
+        {% if page < pages %}
+          <a href="{{ url_for(request.endpoint, page=page+1, tag_id=tag_id) }}">&raquo;</a>
+        {% endif %}
+
+        <p>
+        Showing page {{ page }} of {{ pages }}
+        </p>
+      </div>
+
     {% endif %}
-  {% endfor %}
+  {% endif %}
 {% endblock %}

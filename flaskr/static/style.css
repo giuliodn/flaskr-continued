@@ -104,11 +104,30 @@ nav ul li a, nav ul li span, header .action {
   margin: 0;
 }
 
+
 .post .comment {
   padding-left: 1rem;
   font-size: 0.85em;
   color: black;
   margin-top: 0.2rem;
+  white-space: pre-line;
+}
+
+.post .tag {
+  padding: 0.1rem;
+  padding-left: 0.3rem;
+  padding-right: 0.3rem;
+  font-size: 0.85em;
+  color: gray;
+  margin: 0.2rem;
+  white-space: pre-line;
+  border: 1px solid gray;
+  border-radius: 6px;
+  float: left;
+}
+
+.post .tag:hover {
+  background-color: lightgrey;
 }
 
 .post .body {
@@ -134,6 +153,28 @@ nav ul li a, nav ul li span, header .action {
   margin-bottom: 1em;
 }
 
+.content .searchform {
+  margin: 0;
+  margin-left: 2em;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  width: 100%;
+}
+
+.content .searchform input[type=text] {
+  width: 150px;
+  margin-bottom: 0.5em;
+  -webkit-transition: width 0.4s ease-in-out;
+  transition: width 0.4s ease-in-out;
+}
+
+/* When the input field gets focus, change its width to 100% */
+.content .searchform input[type=text]:focus {
+  width: 100%;
+}
+
+
 .content textarea {
   min-height: 12em;
   resize: vertical;
@@ -146,4 +187,35 @@ input.danger {
 input[type=submit] {
   align-self: start;
   min-width: 10em;
+}
+
+.pagination {
+  padding-top: 1em;
+  width: 50%;
+  margin: auto;
+  text-align: center;
+}
+
+.pagination a {
+  color: black;
+  display: inline;
+  float: none;
+  padding: 8px 16px;
+  text-decoration: none;
+}
+
+.pagination a.active {
+  background-color: #377ba8;
+  color: white;
+  border-radius: 5px;
+}
+
+.pagination a:hover:not(.active) {
+  background-color: #ddd;
+  border-radius: 5px;
+}
+
+.pagination p {
+  font-size: 0.85em;
+  color: #377ba8;
 }
