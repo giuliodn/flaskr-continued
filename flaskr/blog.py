@@ -282,10 +282,11 @@ def image(id=None):
                 db.commit()
                 # Refresh post
                 post = get_post(id)
-            if mode == 'update':
-                return render_template("blog/update.html", post=post, tags=tags_string)
-            if mode == 'create':
-                return render_template("blog/create.html", filename = filename)
+
+        if mode == 'update':
+            return render_template("blog/update.html", post=post, tags=tags_string)
+        if mode == 'create':
+            return render_template("blog/create.html", filename = filename)
 
 
 @bp.route("/<int:id>/update", methods=("GET", "POST"))
@@ -675,13 +676,13 @@ def search():
     offset = (page-1) * POSTS_PER_PAGE
 
     posts = db.execute(
-        "SELECT p.id, title, body, created, author_id, username, likes, unlikes, nr_comments"
+        "SELECT p.id, title, image, body, created, author_id, username, likes, unlikes, nr_comments"
         " FROM post p JOIN user u ON author_id=u.id"
         " WHERE title LIKE ?"
         " ORDER BY created DESC LIMIT ? OFFSET ?",
         (search, limit, offset),
     ).fetchall()
-    
+
     return render_template("blog/index.html", posts=posts, tag_id=None, page=page, pages=pages)
 
 @bp.route("/uploaded_image/<filename>")
@@ -691,4 +692,4 @@ def uploaded_image(filename):
 
 def allowed_file(filename):
     return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+           filename.rsplit('.', 1)[-1].lower() in ALLOWED_EXTENSIONS
