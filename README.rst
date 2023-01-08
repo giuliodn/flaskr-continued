@@ -1,7 +1,7 @@
 # Flaskr... continued
 Flaskr (Flask tutorial) continued...  with homework
 
-This repository pick up from where flask tutorial ([the Flaskr blog application(https://flask.palletsprojects.com/en/1.1.x/tutorial/)] ) left up. You can find the original git repository [here(https://github.com/pallets/flask/tree/1.1.2/examples/tutorial)]
+This repository pick up from where flask tutorial ([the Flaskr blog application](https://flask.palletsprojects.com/en/1.1.x/tutorial/) ) left up. You can find the original git repository [here](https://github.com/pallets/flask/tree/1.1.2/examples/tutorial)
 
 At the end of the tutorial you're left with some "homework": suggestions to extend the blog application and improve your skills. 
 
@@ -25,7 +25,7 @@ In this repository I'll do my best to fullfil those suggestions:
 
 * An RSS feed of new posts.
 
-This is an accompagnatory repository to a series of [Medium(https://medium.com/)] articles explaining the changes step by step.
+This is an accompagnatory repository to a series of [Medium](https://medium.com/) articles explaining the changes step by step.
 
 You can find articles here:
 
