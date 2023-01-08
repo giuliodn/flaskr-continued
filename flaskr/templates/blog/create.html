@@ -5,20 +5,43 @@
 {% endblock %}
 
 {% block content %}
+  {% if editMode is not defined %}
+    {% set editMode = 'MD' %}
+  {% endif %}
+  
   <form method="post" action="{{ url_for('.create', filename=filename) }}" enctype=multipart/form-data>
     <label for="title">Title</label>
     <input name="title" id="title" value="{{ request.form['title'] }}" required>
     {% if filename %}
       <img src="{{ url_for('.uploaded_image', filename=filename)}}">
-      <input class="danger" type="submit" formaction ="{{ url_for('.delete_image', id=None, mode='create') }}" value="Delete image">
+      <input class="danger" type="submit" formaction ="{{ url_for('.delete_image', id=None, mode='create', editMode=editMode) }}" value="Delete image">
+    {% else %}
+      {% set filename = "" %}
     {% endif %}
     <label for="file">Image</label>
     <input type="file" name=file>
-    <input type="submit" value="Update image now" formaction ="{{ url_for('.update_image', id=None, mode='create') }}">
+    <input type="submit" value="Update image now" formaction ="{{ url_for('.update_image', id=None, mode='create', filename=filename, editMode=editMode) }}">
     <label for="body">Body</label>
-    <textarea name="body" id="body">{{ request.form['body'] }}</textarea>
+    {% if editMode == 'MD' %}
+      <textarea name="body" id="body">{{ request.form['body'] }}</textarea>
+    {% elif editMode == 'html' %}
+      <textarea name="body" id="body" style="display:none;">{{ request.form['body'] }}</textarea>
+      <div style="border:1px solid black; padding: 5px 3px 5px 3px; margin-bottom: 5px;">
+        {{ html|safe }}
+      </div>
+    {% endif %}
+    <div>
+      {% if editMode == 'MD' %}
+        <input type="submit" value="Edit Markdown" class="display: inline-block" formaction ="{{ url_for('.to_markdown', id=None, mode='create', filename=filename) }}" disabled>
+        <input type="submit" value="Preview" class="display: inline-block"formaction ="{{ url_for('.to_html', id=None, mode='create', filename=filename) }}">
+      {% elif editMode == 'html' %}
+        <input type="submit" value="Edit Markdown" class="display: inline-block" formaction ="{{ url_for('.to_markdown', id=None, mode='create', filename=filename) }}">
+        <input type="submit" value="Preview" class="display: inline-block"formaction ="{{ url_for('.to_html', id=None, mode='create', filename=filename) }}" disabled>
+      {% endif %}
+    </div>
     <label for="tags">Add your tags (comma separated):</label>
     <textarea style="min-height: 3em" name="tags" id="tags">{{ request.form['tags'] }}</textarea>
     <input type="submit" value="Save">
   </form>
+
 {% endblock %}

@@ -1,12 +1,39 @@
-Flaskr
-======
+# Flaskr... continued
+Flaskr (Flask tutorial) continued...  with homework
 
-The basic blog app built in the Flask `tutorial`_.
+This repository pick up from where flask tutorial ([the Flaskr blog application](https://flask.palletsprojects.com/en/1.1.x/tutorial/) ) left up. You can find the original git repository [here](https://github.com/pallets/flask/tree/1.1.2/examples/tutorial)
 
-.. _tutorial: https://flask.palletsprojects.com/tutorial/
+At the end of the tutorial you're left with some "homework": suggestions to extend the blog application and improve your skills. 
 
+In this repository I'll do my best to fullfil those suggestions:
 
-Install
+* A detail view to show a single post. Click a post’s title to go to its page.
+
+* Like / unlike a post.
+
+* Comments.
+
+* Tags. Clicking a tag shows all the posts with that tag.
+
+* A search box that filters the index page by name.
+
+* Paged display. Only show 5 posts per page.
+
+* Upload an image to go along with a post.
+
+* Format posts using Markdown.
+
+* An RSS feed of new posts.
+
+This is an accompagnatory repository to a series of [Medium](https://medium.com/) articles explaining the changes step by step.
+
+You can find articles here:
+
+* [Flaskr tutorial …continued (Part 1)](https://medium.com/@giuliodn/flaskr-tutorial-continued-part-1-23daa764fa72)
+
+For installation the same suggestion of Flask's team applies.
+
+Install *(almost from the original Flask github repository)*
 -------
 
 **Be sure to use the same version of the code as the version of the docs
@@ -14,8 +41,8 @@ you're reading.** You probably want the latest tagged version, but the
 default Git version is the master branch. ::
 
     # clone the repository
-    $ git clone https://github.com/pallets/flask
-    $ cd flask
+    $ git clone https://github.com/giuliodn/flaskr_continued
+    $ cd flaskr-continued
     # checkout the correct version
     $ git tag  # shows the tagged versions
     $ git checkout latest-tag-found-above
@@ -48,16 +75,16 @@ Run
 ::
 
     $ export FLASK_APP=flaskr
-    $ export FLASK_ENV=development
-    $ flask init-db
-    $ flask run
+    $ export FLASK_DEBUG=1
+    $ flask --app flaskr init-db
+    $ flask --app flaskr run --debug
 
 Or on Windows cmd::
 
     > set FLASK_APP=flaskr
-    > set FLASK_ENV=development
-    > flask init-db
-    > flask run
+    > set FLASK_DEBUG=1
+    > flask --app flaskr init-db
+    > flask --app flaskr run --debug
 
 Open http://127.0.0.1:5000 in a browser.
 

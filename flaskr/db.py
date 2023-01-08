@@ -5,6 +5,8 @@ from flask import current_app
 from flask import g
 from flask.cli import with_appcontext
 
+import markdown
+
 
 def get_db():
     """Connect to the application's configured database. The connection
@@ -46,6 +48,26 @@ def update_db(filename):
         db.executescript(f.read().decode("utf8"))
 
 
+def add_markdown_support():
+    """Add markdown support.
+       Update database schema and markdown field"""
+    db = get_db()
+
+    with current_app.open_resource("update_markdown.sql") as f:
+       db.executescript(f.read().decode("utf8"))
+
+    posts = db.execute(
+        "SELECT id, body FROM post"
+    ).fetchall()
+
+    for post in posts:
+        html = markdown.markdown(post['body'])
+        id = post['id']
+        db.execute(
+            "UPDATE post SET html = ? WHERE id = ?", (html, id)
+        )
+        db.commit()
+
 
 @click.command("init-db")
 @with_appcontext
@@ -63,6 +85,14 @@ def update_db_command(filename):
     update_db(filename)
     click.echo("Database updated.")
 
+@click.command("add-markdown")
+@with_appcontext
+def add_markdown_command():
+    """Add markdown support"""
+    add_markdown_support()
+    click.echo("Markdown support added. Database updated")
+    
+
 
 def init_app(app):
     """Register database functions with the Flask app. This is called by
@@ -71,3 +101,4 @@ def init_app(app):
     app.teardown_appcontext(close_db)
     app.cli.add_command(init_db_command)
     app.cli.add_command(update_db_command)
+    app.cli.add_command(add_markdown_command)

@@ -135,6 +135,19 @@ nav ul li a, nav ul li span, header .action {
   float: left;
 }
 
+.post .switchbutton {
+  padding: 0.1rem;
+  padding-left: 0.3rem;
+  padding-right: 0.3rem;
+  font-size: 0.85em;
+  color: gray;
+  margin: 0.2rem;
+  white-space: pre-line;
+  border: 1px solid gray;
+  border-radius: 6px;
+  float: left;
+}
+
 .post .tag:hover {
   background-color: lightgrey;
 }
