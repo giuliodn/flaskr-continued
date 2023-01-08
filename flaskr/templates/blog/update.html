@@ -5,6 +5,9 @@
 {% endblock %}
 
 {% block content %}
+  {% if editMode is not defined %}
+    {% set editMode = 'MD' %}
+  {% endif %}
   <form method="post" action="{{ url_for('.update', id=post['id']) }}" enctype=multipart/form-data>
     <label for="title">Title</label>
     <input name="title" id="title" value="{{ request.form['title'] or post['title'] }}" required>
@@ -16,7 +19,23 @@
     <input type="file" name=file>
     <input type="submit" value="Update image now" formaction ="{{ url_for('.update_image', id=post['id'], mode='update') }}">
     <label for="body">Body</label>
-    <textarea name="body" id="body">{{ request.form['body'] or post['body'] }}</textarea>
+    {% if editMode == 'MD' %}
+      <textarea name="body" id="body">{{ request.form['body'] or post['body'] }}</textarea>
+    {% elif editMode == 'html' %}
+      <textarea name="body" id="body" style="display:none;">{{ request.form['body'] or post['body'] }}</textarea>
+      <div style="border:1px solid black; padding: 5px 3px 5px 3px; margin-bottom: 5px;">
+        {{ html|safe }}
+      </div>
+    {% endif %}
+    <div>
+      {% if editMode == 'MD' %}
+        <input type="submit" value="Edit Markdown" class="display: inline-block" formaction ="{{ url_for('.to_markdown', id=post['id'], mode='update', filename=filename) }}" disabled>
+        <input type="submit" value="Preview" class="display: inline-block"formaction ="{{ url_for('.to_html', id=post['id'], mode='update', filename=filename) }}">
+      {% elif editMode == 'html' %}
+        <input type="submit" value="Edit Markdown" class="display: inline-block" formaction ="{{ url_for('.to_markdown', id=post['id'], mode='update', filename=filename, body=body) }}">
+        <input type="submit" value="Preview" class="display: inline-block"formaction ="{{ url_for('.to_html', id=post['id'], mode='update', filename=filename) }}" disabled>
+      {% endif %}
+    </div>
     <label for="tags">Tags (comma separated):</label>
     <textarea style="min-height: 3em" name="tags" id="tags">{{ request.form['tags'] or tags }}</textarea>
     <input type="submit" value="Save">

@@ -13,6 +13,7 @@ from werkzeug.utils import secure_filename
 import os
 from math import ceil
 from uuid import uuid4
+import markdown
 
 from flaskr.auth import login_required
 from flaskr.db import get_db
@@ -55,7 +56,7 @@ def index():
     offset = (page-1) * POSTS_PER_PAGE
 
     posts = db.execute(
-        "SELECT p.id, title, image, body, created, author_id, username, likes, unlikes, nr_comments"
+        "SELECT p.id, title, image, body, html, created, author_id, username, likes, unlikes, nr_comments"
         " FROM post p JOIN user u ON p.author_id = u.id"
         " ORDER BY created DESC LIMIT ? OFFSET ?",
         (limit, offset),
@@ -79,7 +80,7 @@ def get_post(id, check_author=True):
     post = (
         get_db()
         .execute(
-            "SELECT p.id, title, image, body, created, author_id, username, likes, unlikes, nr_comments"
+            "SELECT p.id, title, image, body, html, created, author_id, username, likes, unlikes, nr_comments"
             " FROM post p JOIN user u ON p.author_id = u.id"
             " WHERE p.id = ?",
             (id,),
@@ -162,7 +163,6 @@ def create():
         body = request.form["body"]
         tags = request.form["tags"]
         filename = request.args.get("filename")
-        print('Filename: %s' % filename)
         error = None
 
         if not title:
@@ -189,12 +189,13 @@ def create():
         if error is not None:
             flash(error)
         else:
+            html = markdown.markdown(body)
             db = get_db()
             # lastrowid gives the id of the newly inserted post 
             # which is needed to associate tags
             post_id= db.execute(
-                "INSERT INTO post (title, image, body, author_id) VALUES (?, ?, ?, ?)",
-                (title, filename, body, g.user["id"]),
+                "INSERT INTO post (title, image, body, html, author_id) VALUES (?, ?, ?, ?, ?)",
+                (title, filename, body, html, g.user["id"]),
             ).lastrowid
             db.commit()
 
@@ -234,20 +235,39 @@ def create():
 @bp.route("/<int:id>/delete_image", endpoint='delete_image', methods=("POST", ))
 @bp.route("/update_image", endpoint='update_image', methods=("POST", ))
 @bp.route("/delete_image", endpoint='delete_image', methods=("POST", ))
+@bp.route("/<int:id>/to_markdown", endpoint='to_markdown', methods=("POST", ))
+@bp.route("/<int:id>/to_html", endpoint='to_html', methods=("POST", ))
+@bp.route("/to_markdown", endpoint='to_markdown', methods=("POST", ))
+@bp.route("/to_html", endpoint='to_html', methods=("POST", ))
 @login_required
-def image(id=None):
+def update_while_create_or_update(id=None):
     """Update image while creating/editing post"""
 
     mode = request.args.get('mode')
- 
+    body = request.form['body']
+    html = markdown.markdown(body)
+
+    if 'editMode' in request.args:
+        editMode = request.args.get('editMode')
+    else:
+        editMode = 'MD'
+
     if mode == 'update':
         post = get_post(id)
 
     if request.method == "POST":
+        
         tags = request.form["tags"]
         error = None
 
         tags_string = tags
+
+        if mode == 'create':
+            # there's always a filename variable (thanks Jinja)
+            filename = request.args.get('filename')
+        elif mode == 'update':
+            filename = post['image']
+
 
         # Manage endpoint='delete_image' to instantly delete the image
         # and continue editing
@@ -255,21 +275,25 @@ def image(id=None):
             # Create comma separated string of all the tags
             filename = ''
 
+        # Update displayed image upon request
         if 'update_image' in request.endpoint:
-            if mode == 'update':
-                filename = post['image']
-            if mode == 'create':
-                filename = ''
             if 'file' in request.files:
                 image_file = request.files['file']
-                if image_file.filename == '' and filename == '':
-                    filename = ''
-                elif allowed_file(image_file.filename):
-                    filename = str(uuid4())
-                    image_file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
-                elif image_file.filename != '':
-                    # There's some file selected but extension is not allowed
-                    error = "File extension not allowed"
+                if image_file.filename != '':
+                    if allowed_file(image_file.filename):
+                        filename = str(uuid4())
+                        image_file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
+                    else:
+                        # There's some file selected but extension is not allowed
+                        error = "File extension not allowed"
+
+        # Preview html
+        if 'to_html' in request.endpoint:
+            editMode = 'html'
+        
+        # Back to markdown editmode
+        if 'to_markdown' in request.endpoint:
+            editMode = 'MD'
 
         if error is not None:
             flash(error)
@@ -284,9 +308,9 @@ def image(id=None):
                 post = get_post(id)
 
         if mode == 'update':
-            return render_template("blog/update.html", post=post, tags=tags_string)
+            return render_template("blog/update.html", post=post, tags=tags_string, html=html, editMode=editMode)
         if mode == 'create':
-            return render_template("blog/create.html", filename = filename)
+            return render_template("blog/create.html", filename = filename, html=html, editMode=editMode)
 
 
 @bp.route("/<int:id>/update", methods=("GET", "POST"))
@@ -333,9 +357,10 @@ def update(id):
         if error is not None:
             flash(error)
         else:
+            html = markdown.markdown(body)
             db = get_db()
             db.execute(
-                "UPDATE post SET title = ?, image = ?, body = ? WHERE id = ?", (title, filename, body, id)
+                "UPDATE post SET title = ?, image = ?, body = ?, html = ? WHERE id = ?", (title, filename, body, html, id)
             )
             db.commit()
 
@@ -622,7 +647,7 @@ def show_tag(tag_id):
     offset = (page-1) * POSTS_PER_PAGE
 
     posts = db.execute(
-        "SELECT p.id, title, body, created, author_id, username, likes, unlikes, nr_comments"
+        "SELECT p.id, title, body, html, created, author_id, username, likes, unlikes, nr_comments"
         " FROM post p JOIN user u ON p.author_id = u.id"
         " JOIN tagsofposts t ON t.tag_id = ? AND t.post_id=p.id"
         " ORDER BY created DESC LIMIT ? OFFSET ?",
@@ -676,7 +701,7 @@ def search():
     offset = (page-1) * POSTS_PER_PAGE
 
     posts = db.execute(
-        "SELECT p.id, title, image, body, created, author_id, username, likes, unlikes, nr_comments"
+        "SELECT p.id, title, image, body, html, created, author_id, username, likes, unlikes, nr_comments"
         " FROM post p JOIN user u ON author_id=u.id"
         " WHERE title LIKE ?"
         " ORDER BY created DESC LIMIT ? OFFSET ?",
