@@ -50,14 +50,16 @@
       {% endif %}
     {% endfor %}
 
-  <form style="padding-left: 1rem; padding-top: 3rem;;" method="post">
-    <label for="body">Leave your comment:</label>
-    <textarea name="body" id="body">{{ request.form['body'] or comments['comment_body'] }}</textarea>
-    {% if comment %}
+  {% if g.user %}
+    <form style="padding-left: 1rem; padding-top: 3rem;;" method="post">
+      <label for="body">Leave your comment:</label>
+      <textarea name="body" id="body">{{ request.form['body'] or comments['comment_body'] }}</textarea>
+      {% if comment %}
       <input type="hidden" id="datetime" name="datetime" value={{ comment['comment_created'] or '' }}>
-    {% endif%}
-    <input type="submit" value="Send">
-  </form>
+      {% endif%}
+      <input type="submit" value="Send">
+    </form>
+  {% endif %}
                
 
   </article>
