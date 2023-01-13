@@ -1,5 +1,7 @@
 # Flaskr... continued
-Flaskr (Flask tutorial) continued...  with homework
+=====================
+
+**Flaskr (Flask tutorial) continued...  with homework.**
 
 This repository pick up from where flask tutorial (`the Flaskr blog application`_) left up. You can find the original git repository here_. 
 
@@ -34,9 +36,13 @@ This is an accompagnatory repository to a series of Medium_ articles explaining 
 
 You can find articles here:
 
-* `Flaskr tutorial …continued (Part 1)`_
+* `Flaskr tutorial …continued (Part 1)`_: a detail view to show a single post and like / unlike a post.
 
 .. _`Flaskr tutorial …continued (Part 1)`: https://medium.com/@giuliodn/flaskr-tutorial-continued-part-1-23daa764fa72
+
+* `Flaskr tutorial …continued (Part 2)`_: adding comments to a post.
+
+.. _`Flaskr tutorial …continued (Part 2)`: https://medium.com/@giuliodn/flaskr-tutorial-continued-part-2-71052bcb0a9a
 
 For installation the same suggestion of Flask's team applies.
 
