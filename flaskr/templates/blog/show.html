@@ -26,13 +26,18 @@
 
     <h3 style="margin-bottom: 0.2rem">Tags:</h3>
     <div>
+      {% set tags_nr = 0 %}
       {% for tag in tags %}
-        <p class="tag"><a href="{{ url_for('.show_tag', tag_id=tag['id']) }}" style="text-decoration:none;">{{ tag['tag'] }} </a></p>
-      {% if loop.last %}
-      {% endif %}
+        {% if not loop.last %}
+          <p class="tag"><a href="{{ url_for('.show_tag', tag_id=tag['id']) }}" style="text-decoration:none;">{{ tag['tag'] }} </a></p>
+          {% set tags_nr = tags_nr + 1 %}
+        {% endif %}
       {% endfor %}
     </div>
     <div style="clear:both;"></div>
+    {% if tags_nr == 0 %}
+      <p class="about"> No tags </p>  
+    {% endif %}
     <hr>
       
     <h3>Comments:</h3>

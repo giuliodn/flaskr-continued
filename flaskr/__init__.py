@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask
+from flask import Flask, send_from_directory
 
 
 def create_app(test_config=None):
@@ -43,10 +43,14 @@ def create_app(test_config=None):
     db.init_app(app)
 
     # apply the blueprints to the app
-    from flaskr import auth, blog
+    from flaskr import auth, blog, feed
 
     app.register_blueprint(auth.bp)
     app.register_blueprint(blog.bp)
+    app.register_blueprint(feed.bp)
+
+    # RSS feed will be generated when Application Contexts is available (needs actual ip adress...)
+    app.feed = None
 
     # make url_for('index') == url_for('blog.index')
     # in another app, you might define a separate main index here with

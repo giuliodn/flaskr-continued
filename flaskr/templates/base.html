@@ -1,9 +1,11 @@
 <!doctype html>
 <title>{% block title %}{% endblock %} - Flaskr</title>
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.png') }}">
 <nav>
   <h1><a href="{{ url_for('index') }}">Flaskr</a></h1>
   <ul>
+    <li><a href="{{ url_for('feed.get_feed')}}"><img src="{{ url_for('static', filename='images/rssfeed.svg') }}" alt="RSS feed" style="width:20px;height:20px;"></a></li>
     {% if g.user %}
       <li><span>{{ g.user['username'] }}</span>
       <li><a href="{{ url_for('auth.logout') }}">Log Out</a>

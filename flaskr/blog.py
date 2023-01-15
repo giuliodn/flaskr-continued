@@ -8,15 +8,20 @@ from flask import session
 from flask import url_for
 from flask import current_app
 from flask import send_from_directory
+from flask import Response
 from werkzeug.exceptions import abort
 from werkzeug.utils import secure_filename
 import os
 from math import ceil
 from uuid import uuid4
 import markdown
+from feedgen.feed import FeedGenerator
+import socket
+#from flaskr import feed
 
 from flaskr.auth import login_required
 from flaskr.db import get_db
+from flaskr.feed import add_feed
 
 bp = Blueprint("blog", __name__)
 
@@ -32,6 +37,7 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'tiff'}
 def index():
     """Show all the posts, most recent first."""
 
+    print(request.base_url)
     # Reset previous searches
     session['search_string'] = ''
     session['user_search'] = ''
@@ -225,6 +231,18 @@ def create():
                     (tag_id, post_id),
                 )
                 db.commit()
+
+            # At last, update RSS feed
+
+            post_address_final = '{}/show'.format(post_id)
+
+            user = db.execute(
+                "SELECT username FROM user WHERE id=?", (g.user['id'], ),
+            ).fetchone()
+
+            add_feed(post_address_final, title, user)
+
+
 
             return redirect(url_for("blog.index"))
 
@@ -428,7 +446,7 @@ def delete(id):
     db = get_db()
 
     # If any image file, delete it
-    if post['image'] is not '':
+    if post['image'] != '':
         os.remove(os.path.join(current_app.config['UPLOAD_FOLDER'], post['image']))
 
     # Delete the post
@@ -718,3 +736,10 @@ def uploaded_image(filename):
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[-1].lower() in ALLOWED_EXTENSIONS
+
+
+@bp.route("/favicon.ico")
+def favicon():
+    """ Render favicon if required"""
+
+    return send_from_directory(current_app.static_folder, 'favicon.png')
