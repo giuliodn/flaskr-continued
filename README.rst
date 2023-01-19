@@ -30,7 +30,7 @@ In this repository I'll do my best to fullfil those suggestions:
 
 * An RSS feed of new posts.
 
-This is an accompagnatory repository to a series of Medium_ articles explaining the changes step by step.
+This is an accompagnatory repository to a series of Medium_ articles I've written to explain the changes step by step.
 
 .. _Medium: https://medium.com/
 
@@ -43,6 +43,24 @@ You can find articles here:
 * `Flaskr tutorial …continued (Part 2)`_: adding comments to a post.
 
 .. _`Flaskr tutorial …continued (Part 2)`: https://medium.com/@giuliodn/flaskr-tutorial-continued-part-2-71052bcb0a9a
+
+* `Flaskr tutorial …continued (Part 3)`_: Tags. Clicking a tag shows all the posts with that tag.
+
+.. _`Flaskr tutorial …continued (Part 3)`: https://medium.com/@giuliodn/flask-tutorial-continued-part-3-9cb5572d62ac
+
+* `Flaskr tutorial …continued (Part 4)`_: A search box that filters the index page by name. Paged display.
+
+.. _`Flaskr tutorial …continued (Part 4)`: https://medium.com/@giuliodn/flaskr-tutorial-continued-part-4-e5899f6b8b21
+
+* `Flaskr tutorial …continued (Part 5)`_: Upload an image to go along with a post. Format posts using Markdown.
+
+.. _`Flaskr tutorial …continued (Part 5)`: https://medium.com/@giuliodn/flask-tutorial-continued-part-5-e3b2687926a1
+
+* `Flaskr tutorial …continued (Part 6)`_: An RSS feed of new posts.
+
+.. _`Flaskr tutorial …continued (Part 6)`: https://medium.com/@giuliodn/flask-tutorial-continued-part-6-328b82be285a
+
+
 
 For installation the same suggestion of Flask's team applies.
 
